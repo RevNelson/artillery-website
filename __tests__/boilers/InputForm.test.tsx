@@ -1,19 +1,65 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+// Test Values
+const email = "michael@gmail.com";
+const password = "12345";
+
+type TypeIntoFormPropsType = {
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
+const typeIntoForm = async ({
+  email,
+  password,
+  confirmPassword,
+}: TypeIntoFormPropsType) => {
+  // Find elements
+  const emailInputElement: HTMLInputElement = screen.getByRole("textbox");
+  const passwordInputElement: HTMLInputElement =
+    screen.getByLabelText("Password");
+  const confirmPasswordInputElement: HTMLInputElement =
+    screen.getByLabelText(/confirm password/i);
+
+  // Type values
+  email && (await userEvent.type(emailInputElement, email));
+  password && (await userEvent.type(passwordInputElement, password));
+  confirmPassword &&
+    (await userEvent.type(confirmPasswordInputElement, confirmPassword));
+
+  // Return elements
+  return {
+    emailInputElement,
+    passwordInputElement,
+    confirmPasswordInputElement,
+  };
+};
+
+const clickSubmit = async () => {
+  // Find elements
+  const submitButtonElement = screen.getByRole("button", { name: /submit/i });
+
+  // User Events
+  await userEvent.click(submitButtonElement);
+};
+
 describe("Boiler Input", () => {
-  it("Inputs should be null", () => {
+  beforeEach(() => {
     // Render component we want to test
     render(<InputForm />);
+  });
 
+  it("Inputs should be initially empty", () => {
     // Find elements
-    const emailInputElement = screen.getByRole("textbox") as HTMLInputElement;
-    const passwordInputElement = screen.getByLabelText(
-      "Password"
-    ) as HTMLInputElement;
-    const confirmPasswordInputElement = screen.getByLabelText(
-      /confirm password/i
-    ) as HTMLInputElement;
+    const emailInputElement: HTMLInputElement = screen.getByRole("textbox", {
+      name: /email/i,
+    });
+    const passwordInputElement: HTMLInputElement =
+      screen.getByLabelText("Password");
+    const confirmPasswordInputElement: HTMLInputElement =
+      screen.getByLabelText(/confirm password/i);
 
     // Assertions
     expect(emailInputElement.value).toBe("");
@@ -22,194 +68,89 @@ describe("Boiler Input", () => {
   });
 
   it("Should be able to type an email", async () => {
-    // Render component we want to test
-    render(<InputForm />);
+    const { emailInputElement } = await typeIntoForm({ email });
 
-    // Test values
-    const testEmail = "michael@gmail.com";
-
-    // Find elements
-    const emailInputElement = screen.getByRole("textbox", {
-      name: /email/i,
-    }) as HTMLInputElement;
-
-    // User Events
-    await userEvent.type(emailInputElement, testEmail);
-
-    // Assertions
-    expect(emailInputElement.value).toBe(testEmail);
+    expect(emailInputElement.value).toBe(email);
   });
 
   it("Should be able to type a password", async () => {
-    // Render component we want to test
-    render(<InputForm />);
+    const { passwordInputElement } = await typeIntoForm({ password });
 
-    // Test values
-    const testPassword = "password";
-
-    // Find elements
-    const passwordInputElement = screen.getByLabelText(
-      "Password"
-    ) as HTMLInputElement;
-
-    // User Events
-    await userEvent.type(passwordInputElement, testPassword);
-
-    // Assertions
-    expect(passwordInputElement.value).toBe(testPassword);
+    expect(passwordInputElement.value).toBe(password);
   });
 
   it("Should be able to type a password confirmation", async () => {
-    // Render component we want to test
-    render(<InputForm />);
+    const { confirmPasswordInputElement } = await typeIntoForm({
+      confirmPassword: password,
+    });
 
-    // Test values
-    const testPassword = "password";
-
-    // Find elements
-    const confirmPasswordInputElement = screen.getByLabelText(
-      /confirm password/i
-    ) as HTMLInputElement;
-
-    // User Events
-    await userEvent.type(confirmPasswordInputElement, testPassword);
-
-    // Assertions
-    expect(confirmPasswordInputElement.value).toBe(testPassword);
+    expect(confirmPasswordInputElement.value).toBe(password);
   });
 
-  it("Should show email error message only after submitting invalid email", async () => {
-    // Render component we want to test
-    render(<InputForm />);
+  describe("Error Handling", () => {
+    it("Should show email error message only after submitting invalid email", async () => {
+      // Test values
+      const errorMessage = /the email you input is invalid/i;
 
-    // Test values
-    const testEmail = "michaelgmail.com";
-    const errorMessage = /the email you input is invalid/i;
+      // Pre Assertions
+      expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
 
-    // Find elements
-    const emailErrorElement = screen.queryByText(errorMessage);
-    const emailInputElement = screen.getByRole("textbox", {
-      name: /email/i,
-    }) as HTMLInputElement;
-    const submitButtonElement = screen.getByRole("button", { name: /submit/i });
+      // User Events
+      await typeIntoForm({ email: "michaelgmail.com" });
+      await clickSubmit();
 
-    // Pre Assertions
+      // Assertions
+      expect(screen.queryByText(errorMessage)).toBeInTheDocument();
+    });
 
-    expect(emailErrorElement).not.toBeInTheDocument();
+    it("Should show password error if password is less than 5 characters", async () => {
+      // Test values
+      const errorMessage =
+        /the password you entered should be 5 or more characters/i;
 
-    // User Events
-    await userEvent.type(emailInputElement, testEmail);
-    await userEvent.click(submitButtonElement);
+      // Pre Assertions
+      await typeIntoForm({ email, password: "123" });
+      expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+      await clickSubmit();
 
-    // Assertions
-    const emailErrorElementAgain = screen.queryByText(errorMessage);
-    expect(emailErrorElementAgain).toBeInTheDocument();
-  });
+      // Assertions
+      expect(screen.queryByText(errorMessage)).toBeInTheDocument();
+    });
 
-  it("Should show password error if password is less than 5 characters", async () => {
-    // Render component we want to test
-    render(<InputForm />);
+    it("Should show confirm password error if passwords don't match", async () => {
+      // Test values
+      const errorMessage = /the passwords don't match. try again/i;
 
-    // Test values
-    const testEmail = "michael@gmail.com";
-    const errorMessage =
-      /the password you entered should be 5 or more characters/i;
+      // Pre Assertions
+      await typeIntoForm({ email, password });
+      expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
 
-    // Find elements
-    const passwordErrorElement = screen.queryByText(errorMessage);
-    const emailInputElement = screen.getByRole("textbox", {
-      name: /email/i,
-    }) as HTMLInputElement;
-    const submitButtonElement = screen.getByRole("button", { name: /submit/i });
-    const passwordInputElement = screen.getByLabelText(
-      "Password"
-    ) as HTMLInputElement;
+      // User Events
+      await typeIntoForm({ confirmPassword: "123456" });
+      await clickSubmit();
 
-    // Pre Assertions
-    await userEvent.type(emailInputElement, testEmail);
-    await userEvent.type(passwordInputElement, "123");
-    expect(passwordErrorElement).not.toBeInTheDocument();
+      // Assertions
+      expect(screen.queryByText(errorMessage)).toBeInTheDocument();
+    });
 
-    // Assertions
-    await userEvent.click(submitButtonElement);
-    const passwordErrorElementAgain = screen.queryByText(errorMessage);
-    expect(passwordErrorElementAgain).toBeInTheDocument();
-  });
+    it("Should show no error message if every input is valid", async () => {
+      // User Events
+      await typeIntoForm({ email, password, confirmPassword: password });
+      await clickSubmit();
 
-  it("Should show confirm password error if passwords don't match", async () => {
-    // Render component we want to test
-    render(<InputForm />);
-
-    // Test values
-    const testEmail = "michael@gmail.com";
-    const errorMessage = /the passwords don't match. try again/i;
-
-    // Find elements
-    const confirmpasswordErrorElement = screen.queryByText(errorMessage);
-    const emailInputElement = screen.getByRole("textbox", {
-      name: /email/i,
-    }) as HTMLInputElement;
-    const submitButtonElement = screen.getByRole("button", { name: /submit/i });
-    const passwordInputElement = screen.getByLabelText(
-      "Password"
-    ) as HTMLInputElement;
-    const confirmPasswordInputElement = screen.getByLabelText(
-      /confirm password/i
-    ) as HTMLInputElement;
-
-    // Pre Assertions
-    await userEvent.type(emailInputElement, testEmail);
-    await userEvent.type(passwordInputElement, "12345");
-    expect(confirmpasswordErrorElement).not.toBeInTheDocument();
-
-    // User Events
-    await userEvent.type(confirmPasswordInputElement, "123456");
-    await userEvent.click(submitButtonElement);
-
-    // Assertions
-    const confirmPasswordErrorElementAgain = screen.queryByText(errorMessage);
-    expect(confirmPasswordErrorElementAgain).toBeInTheDocument();
-  });
-
-  it("Should show no error message if every input is valid", async () => {
-    // Render component we want to test
-    render(<InputForm />);
-
-    // Test values
-    const testEmail = "michael@gmail.com";
-    const testPassword = "12345";
-    const emailErrorMessage = /the email you input is invalid/i;
-    const passwordErrorMessage =
-      /the password you entered should be 5 or more characters/i;
-    const confirmPasswordErrorMessage = /the passwords don't match. try again/i;
-
-    // Find elements
-    const emailInputElement = screen.getByRole("textbox", {
-      name: /email/i,
-    }) as HTMLInputElement;
-    const submitButtonElement = screen.getByRole("button", { name: /submit/i });
-    const passwordInputElement = screen.getByLabelText(
-      "Password"
-    ) as HTMLInputElement;
-    const confirmPasswordInputElement = screen.getByLabelText(
-      /confirm password/i
-    ) as HTMLInputElement;
-
-    // User Events
-    await userEvent.type(emailInputElement, testEmail);
-    await userEvent.type(passwordInputElement, testPassword);
-    await userEvent.type(confirmPasswordInputElement, testPassword);
-    await userEvent.click(submitButtonElement);
-
-    // Assertions
-    const emailErrorElementAgain = screen.queryByText(emailErrorMessage);
-    const passwordErrorElementAgain = screen.queryByText(passwordErrorMessage);
-    const confirmPasswordErrorElementAgain = screen.queryByText(
-      confirmPasswordErrorMessage
-    );
-    expect(emailErrorElementAgain).not.toBeInTheDocument();
-    expect(passwordErrorElementAgain).not.toBeInTheDocument();
-    expect(confirmPasswordErrorElementAgain).not.toBeInTheDocument();
+      // Assertions
+      expect(
+        screen.queryByText(/the email you input is invalid/i)
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(
+          /the password you entered should be 5 or more characters/i
+        )
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/the passwords don't match. try again/i)
+      ).not.toBeInTheDocument();
+    });
   });
 });
 
