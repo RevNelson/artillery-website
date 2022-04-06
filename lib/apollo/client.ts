@@ -1,18 +1,19 @@
+import { useMemo } from "react";
+import { AppProps } from "next/dist/pages/_app";
 import {
-  ApolloCache,
   ApolloClient,
   ApolloLink,
+  DefaultOptions,
   HttpLink,
   NormalizedCacheObject,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
-
+import merge from "deepmerge";
+import isEqual from "lodash.isequal";
 import fetch from "isomorphic-unfetch";
-import { IncomingHttpHeaders } from "http2";
-// import { CachePersistor, LocalStorageWrapper } from "apollo3-cache-persist"
 
 import { cache as defaultCache } from "./cache";
-import { isServer } from "@lib/utils";
+import { isServer } from "@lib/utils/isServer";
 import { authConstants } from "@lib/constants";
 import { InMemoryAuthTokenType } from "@lib/types/auth";
 
@@ -21,8 +22,6 @@ export const PERSISTOR_CACHE_KEY =
 
 export const APOLLO_STATE_PROP_NAME =
   process.env.NEXT_PUBLIC_APOLLO_STATE_PROP_NAME || "__APOLLO_STATE__";
-
-// const isDev = (): boolean => process.env.NODE_ENV === "development"
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
@@ -42,23 +41,12 @@ const isTokenValid = (authToken: InMemoryAuthTokenType): boolean => {
   return false;
 };
 
-const createApolloClient = ({
-  headers,
-  cache,
-}: {
-  headers: IncomingHttpHeaders | undefined;
-  cache: ApolloCache<NormalizedCacheObject> | undefined;
-}) => {
+const createApolloClient = () => {
   // isomorphic fetch for passing the cookies along with each GraphQL request
 
   const enhancedFetch = (url: RequestInfo, init: RequestInit) => {
     return fetch(url, {
       ...init,
-      headers: {
-        ...init.headers,
-        // here we pass the cookie along for each request
-        Cookie: headers?.cookie ?? "",
-      },
     }).then((response) => response);
   };
 
@@ -169,19 +157,66 @@ const createApolloClient = ({
     httpLink,
   ]);
 
+  let defaultOptions: DefaultOptions;
+  if (typeof window === "undefined") {
+    //We don't want any cache to be stored server side
+    defaultOptions = {
+      query: {
+        fetchPolicy: "no-cache",
+        errorPolicy: "all",
+      },
+    };
+  } else {
+    //We immediately show results, but check in the background if any changes occured, and eventually update the view
+    defaultOptions = {
+      query: {
+        fetchPolicy: "cache-first",
+        errorPolicy: "all",
+      },
+    };
+  }
+
   return new ApolloClient({
     ssrMode: isServer,
     link: apolloLink,
-    cache: cache || defaultCache,
+    cache: defaultCache,
+    defaultOptions,
   });
 };
 
-interface InitializeApollo {
-  headers?: IncomingHttpHeaders;
-  cache?: ApolloCache<NormalizedCacheObject>;
-}
-const initializeApollo = ({ headers, cache }: InitializeApollo) => {
-  const _apolloClient = apolloClient ?? createApolloClient({ headers, cache });
+export const useApollo = (
+  pageProps: Record<string, unknown>
+): ApolloClient<NormalizedCacheObject> => {
+  const state = pageProps[APOLLO_STATE_PROP_NAME] as
+    | NormalizedCacheObject
+    | undefined;
+  const store = useMemo(() => initializeApollo(state), [state]);
+  return store;
+};
+
+export const initializeApollo = (
+  initialState: NormalizedCacheObject | undefined = undefined
+) => {
+  const _apolloClient = apolloClient ?? createApolloClient();
+
+  if (initialState) {
+    // Get existing cache, loaded during client side data fetching
+    const existingCache = _apolloClient.extract();
+
+    // Merge the existing cache into data passed from getStaticProps/getServerSideProps
+    const data = merge(initialState, existingCache, {
+      // combine arrays using object equality (like in sets)
+      arrayMerge: (destinationArray, sourceArray) => [
+        ...sourceArray,
+        ...destinationArray.filter((d) =>
+          sourceArray.every((s) => !isEqual(d, s))
+        ),
+      ],
+    });
+
+    // Restore the cache with the merged data
+    _apolloClient.cache.restore(data);
+  }
 
   // For SSG and SSR always create a new Apollo Client
   if (isServer) return _apolloClient;
@@ -192,4 +227,13 @@ const initializeApollo = ({ headers, cache }: InitializeApollo) => {
   return _apolloClient;
 };
 
-export default initializeApollo;
+export const addApolloState = (
+  client: ApolloClient<NormalizedCacheObject>,
+  pageProps: AppProps["pageProps"]
+) => {
+  if (pageProps?.props) {
+    pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
+  }
+
+  return pageProps;
+};

@@ -3,8 +3,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider";
 
-import initializeApollo from "@lib/apollo/client";
-import useApollo from "@lib/apollo/useApollo";
+import { useApollo } from "@lib/apollo/client";
 
 // ####
 // #### Dynamic Imports
@@ -16,14 +15,14 @@ import useApollo from "@lib/apollo/useApollo";
 // #### Variables
 // ####
 
-function ARTilleryWebsite({ Component, pageProps }: AppProps) {
-  const { client: apolloClient } = useApollo(pageProps);
+function App({ Component, pageProps }: AppProps) {
+  const apolloClient = useApollo(pageProps);
 
   return (
-    <ApolloProvider client={apolloClient || initializeApollo({})}>
+    <ApolloProvider client={apolloClient}>
       <Component {...pageProps} />
     </ApolloProvider>
   );
 }
 
-export default ARTilleryWebsite;
+export default App;

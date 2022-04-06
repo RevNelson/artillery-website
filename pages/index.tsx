@@ -1,10 +1,14 @@
 import Link from "next/link";
+import { GetStaticProps, InferGetStaticPropsType } from "next/types";
 import { gql } from "@apollo/client/core";
 
-import initializeApollo from "@lib/apollo/client";
-import addApolloState from "@lib/apollo/addApolloState";
+import { initializeApollo, addApolloState } from "@lib/apollo/client";
 
-export default function Home() {
+export default function Home(
+  props: InferGetStaticPropsType<typeof getStaticProps>
+) {
+  console.log("DATA", props);
+
   return (
     <>
       <nav>
@@ -23,10 +27,10 @@ export default function Home() {
 // #### Data Fetching
 // ####
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async (context) => {
   const client = initializeApollo({});
 
-  const { data } = await client.query({
+  const { data, loading, error } = await client.query({
     query: gql`
       query NewQuery {
         menus(where: { language: "uk" }) {
@@ -40,14 +44,17 @@ export async function getStaticProps() {
     `,
   });
 
-  console.log(data);
+  const { locale } = context;
 
-  const staticProps = {
-    props: {},
-    revalidate: 4 * 60 * 60, // Every 4 hours
-  };
+  console.log(data);
+  console.log("LOCALE", locale);
+
+  const staticProps = { data, loading };
 
   addApolloState(client, staticProps);
 
-  return staticProps;
-}
+  return {
+    props: staticProps,
+    revalidate: 4 * 60 * 60, // Every 4 hours
+  };
+};
