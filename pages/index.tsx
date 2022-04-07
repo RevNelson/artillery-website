@@ -30,7 +30,7 @@ export default function Home(
 export const getStaticProps: GetStaticProps = async (context) => {
   const client = initializeApollo({});
 
-  const { data, loading, error } = await client.query({
+  const { data, loading } = await client.query({
     query: gql`
       query NewQuery {
         menus(where: { language: "uk" }) {
@@ -43,11 +43,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       }
     `,
   });
-
-  const { locale } = context;
-
-  console.log(data);
-  console.log("LOCALE", locale);
 
   const staticProps = { data, loading };
 
