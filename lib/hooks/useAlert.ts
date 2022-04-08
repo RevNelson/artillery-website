@@ -1,4 +1,4 @@
-import { useReactiveVar } from "@apollo/client";
+import { useReactiveVar } from "@apollo/client/react/hooks/useReactiveVar";
 
 import { alertVar } from "@lib/apollo/cache";
 import { AlertProps } from "@lib/types/alerts";

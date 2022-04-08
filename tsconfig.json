@@ -26,6 +26,6 @@
       "@pages/*": ["pages/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/i18n/config.js"],
   "exclude": ["node_modules"]
 }
