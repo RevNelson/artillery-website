@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { GetStaticProps, InferGetStaticPropsType } from "next/types";
 
@@ -6,35 +7,50 @@ import useLocale from "@lib/hooks/useLocale";
 import { ArtilleryPage } from "@api/gql/types";
 import getLocalizedPage from "@api/queries/dynamic/getLocalizedPage";
 
+// ####
+// #### Dynamic Imports
+// ####
+
+const importOpts = {};
+
+const FlagIcon = dynamic(() => import("@components/FlagIcon"), importOpts);
+
+// ####
+// #### Component
+// ####
+
 export default function Home({
   data,
   loading,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { setLocale } = useLocale();
+  const { locale, setLocale } = useLocale();
 
   const page = data.artilleryPages.nodes[0] as ArtilleryPage;
 
   const acf = page.ACFhome;
 
   return (
-    <>
+    <div className="font-sans">
       <nav>
         <Link href="/about">
           <a>About</a>
         </Link>
       </nav>
       <h1>{page.title}</h1>
-
       <div dangerouslySetInnerHTML={{ __html: page.content || "" }}></div>
-
       <button onClick={() => setLocale("en")}>English</button>
       <button onClick={() => setLocale("uk")}>Ukrainian</button>
       <button onClick={() => setLocale("pl")}>Polish</button>
       <button onClick={() => setLocale("es")}>Spanish</button>
-
       {acf?.hero && <div>{acf.hero}</div>}
-    </>
+      <FlagIcon
+        locale={locale}
+        square={false}
+        size={32}
+        rounded={"rounded-lg"}
+      />
+    </div>
   );
 }
 

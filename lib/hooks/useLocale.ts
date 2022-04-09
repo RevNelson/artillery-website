@@ -32,7 +32,7 @@ const useLocale = () => {
   };
 
   return {
-    locale: router.locale,
+    locale: router.locale || i18nConfig.defaultLocale,
     defaultLocale: i18nConfig.defaultLocale,
     locales: i18nConfig.locales,
     setLocale,
