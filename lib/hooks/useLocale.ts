@@ -8,31 +8,28 @@ import { isServer } from "@lib/utils/isServer";
 const useLocale = () => {
   const router = useRouter();
 
-  const getLocale = useCallback((): string | void => {
+  const getLocale = (cookieKey: string = "NEXT_LOCALE"): string | void => {
+    // Returns a string only if locale was previously set
+
     if (!isServer) {
-      const userLocale = cookies.get("NEXT_LOCALE");
+      const userLocale = cookies.get(cookieKey);
       if (userLocale) return userLocale;
     }
-  }, []);
+  };
 
-  const setLocale = useCallback((locale: string) => {
+  const setLocale = (locale: string) => {
     if (!isServer && i18nConfig.locales.includes(locale)) {
-      cookies.set("NEXT_LOCALE", locale);
-    }
-  }, []);
+      const currentLocale = getLocale();
+      if (!currentLocale || currentLocale !== locale) {
+        // Won't update if selected locale is same as saved
 
-  useEffect(() => {
-    const getLocale = (): string | void => {
-      if (!isServer) {
-        const userLocale = cookies.get("NEXT_LOCALE");
-        if (userLocale) return userLocale;
+        // Set cookie so return visits will be in chosen locale
+        cookies.set("NEXT_LOCALE", locale);
+        // Replace current page request with request in new locale
+        router.replace(router.pathname, router.pathname, { locale });
       }
-    };
-
-    if (!getLocale()) {
-      setLocale(router.locale || i18nConfig.defaultLocale);
     }
-  }, [router, getLocale, setLocale]);
+  };
 
   return {
     locale: router.locale,

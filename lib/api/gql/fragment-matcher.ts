@@ -6,6 +6,9 @@
       }
       const result: PossibleTypesResultData = {
   "possibleTypes": {
+    "AcfFieldGroup": [
+      "ArtilleryPage_Acfhome"
+    ],
     "Attribute": [
       "SimpleAttribute",
       "VariationAttribute"
@@ -65,6 +68,7 @@
       "EnqueuedStylesheet"
     ],
     "HierarchicalContentNode": [
+      "ArtilleryPage",
       "MediaItem",
       "Page"
     ],
@@ -165,6 +169,7 @@
       "VariableProduct"
     ],
     "NodeWithPageAttributes": [
+      "ArtilleryPage",
       "Page"
     ],
     "NodeWithRevisions": [
