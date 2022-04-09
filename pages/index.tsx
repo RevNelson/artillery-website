@@ -1,13 +1,21 @@
 import Link from "next/link";
 import { GetStaticProps, InferGetStaticPropsType } from "next/types";
-import { gql } from "@apollo/client/core";
 
 import { initializeApollo, addApolloState } from "@lib/apollo/client";
+import useLocale from "@lib/hooks/useLocale";
+import { ArtilleryPage } from "@api/gql/types";
+import getLocalizedPage from "@api/queries/dynamic/getLocalizedPage";
 
-export default function Home(
-  props: InferGetStaticPropsType<typeof getStaticProps>
-) {
-  console.log("DATA", props);
+export default function Home({
+  data,
+  loading,
+  error,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { setLocale } = useLocale();
+
+  const page = data.artilleryPages.nodes[0] as ArtilleryPage;
+
+  const acf = page.ACFhome;
 
   return (
     <>
@@ -16,9 +24,16 @@ export default function Home(
           <a>About</a>
         </Link>
       </nav>
-      <h1>
-        Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1>
+      <h1>{page.title}</h1>
+
+      <div dangerouslySetInnerHTML={{ __html: page.content || "" }}></div>
+
+      <button onClick={() => setLocale("en")}>English</button>
+      <button onClick={() => setLocale("uk")}>Ukrainian</button>
+      <button onClick={() => setLocale("pl")}>Polish</button>
+      <button onClick={() => setLocale("es")}>Spanish</button>
+
+      {acf?.hero && <div>{acf.hero}</div>}
     </>
   );
 }
@@ -29,27 +44,23 @@ export default function Home(
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const client = initializeApollo({});
+  const locale = context.locale;
+  const slug = "home";
 
-  const { data, loading } = await client.query({
-    query: gql`
-      query NewQuery {
-        menus(where: { language: "uk" }) {
-          nodes {
-            name
-            slug
-            language
-          }
-        }
-      }
-    `,
+  const acfFields = `ACF${slug} { hero }`;
+
+  const query = getLocalizedPage({ locale, slug, acfFields });
+
+  const { data, loading, error } = await client.query({
+    query,
   });
 
-  const staticProps = { data, loading };
+  const staticProps = { data, loading, error: error || null };
 
   addApolloState(client, staticProps);
 
   return {
-    props: staticProps,
+    props: { ...staticProps },
     revalidate: 4 * 60 * 60, // Every 4 hours
   };
 };

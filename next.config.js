@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 
+const { i18n } = require("./lib/i18n/config");
+
 const nextConfig = {
+  i18n,
   reactStrictMode: true,
-  experimental: {
-    outputStandalone: true,
-  },
   images: {
     domains: ["cdn.nelson.tech"],
+  },
+  experimental: {
+    outputStandalone: true,
   },
 };
 

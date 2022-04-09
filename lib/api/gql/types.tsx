@@ -13,6 +13,12 @@ export type Scalars = {
   Float: number;
 };
 
+/** A Field Group registered by ACF */
+export type AcfFieldGroup = {
+  /** The name of the ACF Field Group */
+  fieldGroupName?: Maybe<Scalars['String']>;
+};
+
 /** Input for the addCartItems mutation */
 export type AddCartItemsInput = {
   /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
@@ -111,12 +117,18 @@ export type ApplyCouponPayload = {
 };
 
 /** The ArtilleryPage type */
-export type ArtilleryPage = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithTemplate & NodeWithTitle & UniformResourceIdentifiable & {
+export type ArtilleryPage = ContentNode & DatabaseIdentifier & HierarchicalContentNode & MenuItemLinkable & Node & NodeWithContentEditor & NodeWithFeaturedImage & NodeWithPageAttributes & NodeWithTemplate & NodeWithTitle & UniformResourceIdentifiable & {
+  /** Added to the GraphQL Schema because the ACF Field Group &quot;ARTillery Home Fields&quot; was set to Show in GraphQL. */
+  ACFhome?: Maybe<ArtilleryPage_Acfhome>;
+  /** Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root). */
+  ancestors?: Maybe<HierarchicalContentNodeToContentNodeAncestorsConnection>;
   /**
    * The id field matches the WP_Post-&gt;ID field.
    * @deprecated Deprecated in favor of the databaseId field
    */
   artilleryPageId: Scalars['Int'];
+  /** Connection between the HierarchicalContentNode type and the ContentNode type */
+  children?: Maybe<HierarchicalContentNodeToContentNodeChildrenConnection>;
   /** The content of the post. */
   content?: Maybe<Scalars['String']>;
   /** Connection between the ContentNode type and the ContentType type */
@@ -165,10 +177,18 @@ export type ArtilleryPage = ContentNode & DatabaseIdentifier & MenuItemLinkable 
   locale?: Maybe<Locale>;
   /** WPML localized url of the page/post */
   localizedWpmlUrl?: Maybe<Scalars['String']>;
+  /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
+  menuOrder?: Maybe<Scalars['Int']>;
   /** The local modified time for a post. If a post was recently updated the modified field will change to match the corresponding time. */
   modified?: Maybe<Scalars['String']>;
   /** The GMT modified time for a post. If a post was recently updated the modified field will change to match the corresponding time in GMT. */
   modifiedGmt?: Maybe<Scalars['String']>;
+  /** The parent of the node. The parent object can be of various types */
+  parent?: Maybe<HierarchicalContentNodeToParentContentNodeConnectionEdge>;
+  /** Database id of the parent node */
+  parentDatabaseId?: Maybe<Scalars['Int']>;
+  /** The globally unique identifier of the parent node. */
+  parentId?: Maybe<Scalars['ID']>;
   /** Connection between the ArtilleryPage type and the ArtilleryPage type */
   preview?: Maybe<ArtilleryPageToPreviewConnectionEdge>;
   /** The database id of the preview node */
@@ -189,6 +209,26 @@ export type ArtilleryPage = ContentNode & DatabaseIdentifier & MenuItemLinkable 
   translations?: Maybe<Array<Maybe<Translation>>>;
   /** The unique resource identifier path */
   uri?: Maybe<Scalars['String']>;
+};
+
+
+/** The ArtilleryPage type */
+export type ArtilleryPageAncestorsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<HierarchicalContentNodeToContentNodeAncestorsConnectionWhereArgs>;
+};
+
+
+/** The ArtilleryPage type */
+export type ArtilleryPageChildrenArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<HierarchicalContentNodeToContentNodeChildrenConnectionWhereArgs>;
 };
 
 
@@ -227,8 +267,6 @@ export enum ArtilleryPageIdType {
   DatabaseId = 'DATABASE_ID',
   /** Identify a resource by the (hashed) Global ID. */
   Id = 'ID',
-  /** Identify a resource by the slug. Available to non-hierarchcial Types where the slug is a unique identifier. */
-  Slug = 'SLUG',
   /** Identify a resource by the URI. */
   Uri = 'URI'
 }
@@ -237,6 +275,15 @@ export enum ArtilleryPageIdType {
 export type ArtilleryPageToPreviewConnectionEdge = {
   /** The node of the connection, without the edges */
   node?: Maybe<ArtilleryPage>;
+};
+
+/** Field Group */
+export type ArtilleryPage_Acfhome = AcfFieldGroup & {
+  /** The name of the ACF Field Group */
+  fieldGroupName?: Maybe<Scalars['String']>;
+  hero?: Maybe<Scalars['String']>;
+  /** Try it out. */
+  test?: Maybe<Scalars['String']>;
 };
 
 /** Attribute object */
@@ -2378,6 +2425,8 @@ export type CreateArtilleryPageInput = {
   date?: InputMaybe<Scalars['String']>;
   /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
   menuOrder?: InputMaybe<Scalars['Int']>;
+  /** The ID of the parent object */
+  parentId?: InputMaybe<Scalars['ID']>;
   /** The password used to protect the content of the object */
   password?: InputMaybe<Scalars['String']>;
   /** The slug of the object */
@@ -4972,40 +5021,6 @@ export type LoginPayload = {
   user?: Maybe<User>;
 };
 
-/** Input for the loginWithCookies mutation */
-export type LoginWithCookiesInput = {
-  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** Input your user/e-mail. */
-  login: Scalars['String'];
-  /** Input your password. */
-  password: Scalars['String'];
-  /** Whether to "remember" the user. Increases the time that the cookie will be kept. Default false. */
-  rememberMe?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** The payload for the loginWithCookies mutation */
-export type LoginWithCookiesPayload = {
-  /** If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** Login operation status */
-  status?: Maybe<Scalars['String']>;
-};
-
-/** Input for the logout mutation */
-export type LogoutInput = {
-  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-};
-
-/** The payload for the logout mutation */
-export type LogoutPayload = {
-  /** If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** Logout operation status */
-  status?: Maybe<Scalars['String']>;
-};
-
 /** Product manage stock enumeration */
 export enum ManageStockEnum {
   False = 'FALSE',
@@ -7107,6 +7122,24 @@ export type Plugin = Node & {
   /** Current version of the plugin. */
   version?: Maybe<Scalars['String']>;
 };
+
+/** The status of the WordPress plugin. */
+export enum PluginStatusEnum {
+  /** The plugin is currently active. */
+  Active = 'ACTIVE',
+  /** The plugin is a drop-in plugin. */
+  DropIn = 'DROP_IN',
+  /** The plugin is currently inactive. */
+  Inactive = 'INACTIVE',
+  /** The plugin is a must-use plugin. */
+  MustUse = 'MUST_USE',
+  /** The plugin is technically active but was paused while loading. */
+  Paused = 'PAUSED',
+  /** The plugin was active recently. */
+  RecentlyActive = 'RECENTLY_ACTIVE',
+  /** The plugin has an upgrade available. */
+  Upgrade = 'UPGRADE'
+}
 
 /** The post type */
 export type Post = ContentNode & DatabaseIdentifier & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & NodeWithTrackbacks & UniformResourceIdentifiable & {
@@ -10881,10 +10914,6 @@ export type RootMutation = {
   increaseCount?: Maybe<Scalars['Int']>;
   /** The payload for the login mutation */
   login?: Maybe<LoginPayload>;
-  /** The payload for the loginWithCookies mutation */
-  loginWithCookies?: Maybe<LoginWithCookiesPayload>;
-  /** The payload for the logout mutation */
-  logout?: Maybe<LogoutPayload>;
   /** The payload for the refreshJwtAuthToken mutation */
   refreshJwtAuthToken?: Maybe<RefreshJwtAuthTokenPayload>;
   /** The payload for the registerCustomer mutation */
@@ -11207,18 +11236,6 @@ export type RootMutationIncreaseCountArgs = {
 /** The root mutation */
 export type RootMutationLoginArgs = {
   input: LoginInput;
-};
-
-
-/** The root mutation */
-export type RootMutationLoginWithCookiesArgs = {
-  input: LoginWithCookiesInput;
-};
-
-
-/** The root mutation */
-export type RootMutationLogoutArgs = {
-  input: LogoutInput;
 };
 
 
@@ -11614,7 +11631,6 @@ export type RootQueryArtilleryPageArgs = {
 export type RootQueryArtilleryPageByArgs = {
   artilleryPageId?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['ID']>;
-  slug?: InputMaybe<Scalars['String']>;
   uri?: InputMaybe<Scalars['String']>;
 };
 
@@ -11901,6 +11917,7 @@ export type RootQueryPluginsArgs = {
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<RootQueryToPluginConnectionWhereArgs>;
 };
 
 
@@ -12976,6 +12993,16 @@ export type RootQueryToPluginConnectionEdge = {
   cursor?: Maybe<Scalars['String']>;
   /** The item at the end of the edge */
   node?: Maybe<Plugin>;
+};
+
+/** Arguments for filtering the RootQueryToPluginConnection connection */
+export type RootQueryToPluginConnectionWhereArgs = {
+  /** Show plugin based on a keyword search. */
+  search?: InputMaybe<Scalars['String']>;
+  /** Retrieve plugins where plugin status is in an array. */
+  stati?: InputMaybe<Array<InputMaybe<PluginStatusEnum>>>;
+  /** Show plugins with a specific status. */
+  status?: InputMaybe<PluginStatusEnum>;
 };
 
 /** Connection between the RootQuery type and the post type */
@@ -15319,6 +15346,8 @@ export type UpdateArtilleryPageInput = {
   id: Scalars['ID'];
   /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
   menuOrder?: InputMaybe<Scalars['Int']>;
+  /** The ID of the parent object */
+  parentId?: InputMaybe<Scalars['ID']>;
   /** The password used to protect the content of the object */
   password?: InputMaybe<Scalars['String']>;
   /** The slug of the object */
@@ -17515,6 +17544,9 @@ export type WritingSettings = {
       }
       const result: PossibleTypesResultData = {
   "possibleTypes": {
+    "AcfFieldGroup": [
+      "ArtilleryPage_Acfhome"
+    ],
     "Attribute": [
       "SimpleAttribute",
       "VariationAttribute"
@@ -17574,6 +17606,7 @@ export type WritingSettings = {
       "EnqueuedStylesheet"
     ],
     "HierarchicalContentNode": [
+      "ArtilleryPage",
       "MediaItem",
       "Page"
     ],
@@ -17674,6 +17707,7 @@ export type WritingSettings = {
       "VariableProduct"
     ],
     "NodeWithPageAttributes": [
+      "ArtilleryPage",
       "Page"
     ],
     "NodeWithRevisions": [

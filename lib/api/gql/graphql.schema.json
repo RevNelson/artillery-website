@@ -9,6 +9,35 @@
     "subscriptionType": null,
     "types": [
       {
+        "kind": "INTERFACE",
+        "name": "AcfFieldGroup",
+        "description": "A Field Group registered by ACF",
+        "fields": [
+          {
+            "name": "fieldGroupName",
+            "description": "The name of the ACF Field Group",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "ArtilleryPage_Acfhome",
+            "ofType": null
+          }
+        ]
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "AddCartItemsInput",
         "description": "Input for the addCartItems mutation",
@@ -550,6 +579,91 @@
         "description": "The ArtilleryPage type",
         "fields": [
           {
+            "name": "ACFhome",
+            "description": "Added to the GraphQL Schema because the ACF Field Group &quot;ARTillery Home Fields&quot; was set to Show in GraphQL.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ArtilleryPage_Acfhome",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ancestors",
+            "description": "Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root).",
+            "args": [
+              {
+                "name": "after",
+                "description": "Cursor used along with the \"first\" argument to reference where in the dataset to get data",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "before",
+                "description": "Cursor used along with the \"last\" argument to reference where in the dataset to get data",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "first",
+                "description": "The number of items to return after the referenced \"after\" cursor",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "last",
+                "description": "The number of items to return before the referenced \"before\" cursor",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "Arguments for filtering the connection",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "HierarchicalContentNodeToContentNodeAncestorsConnectionWhereArgs",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "HierarchicalContentNodeToContentNodeAncestorsConnection",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "artilleryPageId",
             "description": "The id field matches the WP_Post-&gt;ID field.",
             "args": [],
@@ -564,6 +678,79 @@
             },
             "isDeprecated": true,
             "deprecationReason": "Deprecated in favor of the databaseId field"
+          },
+          {
+            "name": "children",
+            "description": "Connection between the HierarchicalContentNode type and the ContentNode type",
+            "args": [
+              {
+                "name": "after",
+                "description": "Cursor used along with the \"first\" argument to reference where in the dataset to get data",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "before",
+                "description": "Cursor used along with the \"last\" argument to reference where in the dataset to get data",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "first",
+                "description": "The number of items to return after the referenced \"after\" cursor",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "last",
+                "description": "The number of items to return before the referenced \"before\" cursor",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "Arguments for filtering the connection",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "HierarchicalContentNodeToContentNodeChildrenConnectionWhereArgs",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "HierarchicalContentNodeToContentNodeChildrenConnection",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           },
           {
             "name": "content",
@@ -985,6 +1172,18 @@
             "deprecationReason": null
           },
           {
+            "name": "menuOrder",
+            "description": "A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "modified",
             "description": "The local modified time for a post. If a post was recently updated the modified field will change to match the corresponding time.",
             "args": [],
@@ -1003,6 +1202,42 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "parent",
+            "description": "The parent of the node. The parent object can be of various types",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "HierarchicalContentNodeToParentContentNodeConnectionEdge",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "parentDatabaseId",
+            "description": "Database id of the parent node",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "parentId",
+            "description": "The globally unique identifier of the parent node.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1164,6 +1399,11 @@
           },
           {
             "kind": "INTERFACE",
+            "name": "HierarchicalContentNode",
+            "ofType": null
+          },
+          {
+            "kind": "INTERFACE",
             "name": "MenuItemLinkable",
             "ofType": null
           },
@@ -1180,6 +1420,11 @@
           {
             "kind": "INTERFACE",
             "name": "NodeWithFeaturedImage",
+            "ofType": null
+          },
+          {
+            "kind": "INTERFACE",
+            "name": "NodeWithPageAttributes",
             "ofType": null
           },
           {
@@ -1222,12 +1467,6 @@
             "deprecationReason": null
           },
           {
-            "name": "SLUG",
-            "description": "Identify a resource by the slug. Available to non-hierarchcial Types where the slug is a unique identifier.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "URI",
             "description": "Identify a resource by the URI.",
             "isDeprecated": false,
@@ -1256,6 +1495,59 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ArtilleryPage_Acfhome",
+        "description": "Field Group",
+        "fields": [
+          {
+            "name": "fieldGroupName",
+            "description": "The name of the ACF Field Group",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "hero",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "test",
+            "description": "Try it out.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "AcfFieldGroup",
+            "ofType": null
+          }
+        ],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -13431,6 +13723,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "parentId",
+            "description": "The ID of the parent object",
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
               "ofType": null
             },
             "defaultValue": null,
@@ -26457,6 +26761,11 @@
         "possibleTypes": [
           {
             "kind": "OBJECT",
+            "name": "ArtilleryPage",
+            "ofType": null
+          },
+          {
+            "kind": "OBJECT",
             "name": "MediaItem",
             "ofType": null
           },
@@ -28105,166 +28414,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "User",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "LoginWithCookiesInput",
-        "description": "Input for the loginWithCookies mutation",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "clientMutationId",
-            "description": "This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "login",
-            "description": "Input your user/e-mail.",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "password",
-            "description": "Input your password.",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "rememberMe",
-            "description": "Whether to \"remember\" the user. Increases the time that the cookie will be kept. Default false.",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LoginWithCookiesPayload",
-        "description": "The payload for the loginWithCookies mutation",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "description": "If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "status",
-            "description": "Login operation status",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "LogoutInput",
-        "description": "Input for the logout mutation",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "clientMutationId",
-            "description": "This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions.",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "LogoutPayload",
-        "description": "The payload for the logout mutation",
-        "fields": [
-          {
-            "name": "clientMutationId",
-            "description": "If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "status",
-            "description": "Logout operation status",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
@@ -33687,6 +33836,11 @@
         "interfaces": [],
         "enumValues": null,
         "possibleTypes": [
+          {
+            "kind": "OBJECT",
+            "name": "ArtilleryPage",
+            "ofType": null
+          },
           {
             "kind": "OBJECT",
             "name": "Page",
@@ -39557,6 +39711,59 @@
           }
         ],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PluginStatusEnum",
+        "description": "The status of the WordPress plugin.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "ACTIVE",
+            "description": "The plugin is currently active.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "DROP_IN",
+            "description": "The plugin is a drop-in plugin.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INACTIVE",
+            "description": "The plugin is currently inactive.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "MUST_USE",
+            "description": "The plugin is a must-use plugin.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PAUSED",
+            "description": "The plugin is technically active but was paused while loading.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "RECENTLY_ACTIVE",
+            "description": "The plugin was active recently.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "UPGRADE",
+            "description": "The plugin has an upgrade available.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
@@ -61767,64 +61974,6 @@
             "deprecationReason": null
           },
           {
-            "name": "loginWithCookies",
-            "description": "The payload for the loginWithCookies mutation",
-            "args": [
-              {
-                "name": "input",
-                "description": "Input for the loginWithCookies mutation",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "LoginWithCookiesInput",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "LoginWithCookiesPayload",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "logout",
-            "description": "The payload for the logout mutation",
-            "args": [
-              {
-                "name": "input",
-                "description": "Input for the logout mutation",
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "LogoutInput",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "LogoutPayload",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "refreshJwtAuthToken",
             "description": "The payload for the refreshJwtAuthToken mutation",
             "args": [
@@ -62850,18 +62999,6 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "ID",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "slug",
-                "description": "Get the ArtilleryPage by its slug (only available for non-hierarchical types)",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -64757,6 +64894,18 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "Arguments for filtering the connection",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "RootQueryToPluginConnectionWhereArgs",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -71285,6 +71434,57 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToPluginConnectionWhereArgs",
+        "description": "Arguments for filtering the RootQueryToPluginConnection connection",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "search",
+            "description": "Show plugin based on a keyword search.",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "stati",
+            "description": "Retrieve plugins where plugin status is in an array.",
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "PluginStatusEnum",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "status",
+            "description": "Show plugins with a specific status.",
+            "type": {
+              "kind": "ENUM",
+              "name": "PluginStatusEnum",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -84817,6 +85017,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "parentId",
+            "description": "The ID of the parent object",
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
               "ofType": null
             },
             "defaultValue": null,
