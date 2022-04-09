@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 import Link from "next/link";
 import { GetStaticProps, InferGetStaticPropsType } from "next/types";
 
@@ -6,14 +6,15 @@ import { initializeApollo, addApolloState } from "@lib/apollo/client";
 import useLocale from "@lib/hooks/useLocale";
 import { ArtilleryPage } from "@api/gql/types";
 import getLocalizedPage from "@api/queries/dynamic/getLocalizedPage";
+import FlagIcon from "@components/FlagIcon";
 
 // ####
 // #### Dynamic Imports
 // ####
 
-const importOpts = {};
+// const importOpts = {};
 
-const FlagIcon = dynamic(() => import("@components/FlagIcon"), importOpts);
+// const FlagIcon = dynamic(() => import("@components/FlagIcon"), importOpts);
 
 // ####
 // #### Component
@@ -24,7 +25,7 @@ export default function Home({
   loading,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { locale, setLocale } = useLocale();
+  const { locale, locales, langs, setLocale } = useLocale();
 
   const page = data.artilleryPages.nodes[0] as ArtilleryPage;
 
@@ -39,10 +40,13 @@ export default function Home({
       </nav>
       <h1>{page.title}</h1>
       <div dangerouslySetInnerHTML={{ __html: page.content || "" }}></div>
-      <button onClick={() => setLocale("en")}>English</button>
-      <button onClick={() => setLocale("uk")}>Ukrainian</button>
-      <button onClick={() => setLocale("pl")}>Polish</button>
-      <button onClick={() => setLocale("es")}>Spanish</button>
+      {locales.map((locale) => {
+        return (
+          <button key={locale + "key"} onClick={() => setLocale(locale)}>
+            {langs[locale].name}
+          </button>
+        );
+      })}
       {acf?.hero && <div>{acf.hero}</div>}
       <FlagIcon
         locale={locale}

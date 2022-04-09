@@ -1,9 +1,12 @@
-import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import cookies from "js-cookie";
 
 import { i18n as i18nConfig } from "@lib/i18n/config";
 import { isServer } from "@lib/utils/isServer";
+
+type LangsType = {
+  [any: string]: { name: string; flag: string };
+};
 
 const useLocale = () => {
   const router = useRouter();
@@ -33,6 +36,7 @@ const useLocale = () => {
 
   return {
     locale: router.locale || i18nConfig.defaultLocale,
+    langs: i18nConfig.langs as LangsType,
     defaultLocale: i18nConfig.defaultLocale,
     locales: i18nConfig.locales,
     setLocale,
