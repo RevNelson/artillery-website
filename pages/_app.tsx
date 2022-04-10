@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "../styles/tailwind.css";
 
 import type { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider";
