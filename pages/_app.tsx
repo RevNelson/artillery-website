@@ -1,10 +1,10 @@
-import "../styles/tailwind.css";
+import "../styles/tailwind.css"
 
-import type { AppProps } from "next/app";
-import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider";
+import type { AppProps } from "next/app"
+import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider"
 
-import { useApollo } from "@lib/apollo/client";
-import Layout from "@components/Layout";
+import { useApollo } from "@lib/apollo/client"
+import Layout from "@components/Layout"
 
 // ####
 // #### Dynamic Imports
@@ -17,7 +17,7 @@ import Layout from "@components/Layout";
 // ####
 
 function App({ Component, pageProps }: AppProps) {
-  const apolloClient = useApollo(pageProps);
+  const apolloClient = useApollo(pageProps)
 
   return (
     <ApolloProvider client={apolloClient}>
@@ -25,7 +25,7 @@ function App({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </Layout>
     </ApolloProvider>
-  );
+  )
 }
 
-export default App;
+export default App

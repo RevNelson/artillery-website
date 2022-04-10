@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-const { i18n } = require("./lib/i18n/config");
+const { i18n } = require("./lib/i18n/config")
 
 const nextConfig = {
   i18n,
@@ -11,10 +11,10 @@ const nextConfig = {
   experimental: {
     outputStandalone: true,
   },
-};
+}
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
-});
+})
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = withBundleAnalyzer(nextConfig)

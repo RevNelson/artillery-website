@@ -1,5 +1,5 @@
-const plugin = require("tailwindcss/plugin");
-const defaultTheme = require("tailwindcss/defaultTheme");
+const plugin = require("tailwindcss/plugin")
+const defaultTheme = require("tailwindcss/defaultTheme")
 
 module.exports = {
   content: [
@@ -95,11 +95,11 @@ module.exports = {
         h1: { fontSize: theme("fontSize.2xl") },
         h2: { fontSize: theme("fontSize.xl") },
         h3: { fontSize: theme("fontSize.lg") },
-      });
+      })
     }),
     "@tailwindcss/aspect-ratio",
     "@tailwindcss/forms",
     "@tailwindcss/line-clamp",
     "@tailwindcss/typography",
   ],
-};
+}

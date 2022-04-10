@@ -1,16 +1,16 @@
-import styled from "@emotion/styled";
-import { Transition } from "@headlessui/react";
+import styled from "@emotion/styled"
+import { Transition } from "@headlessui/react"
 
-import useAlert from "@lib/hooks/useAlert";
-import { Fragment } from "react";
-import tw from "twin.macro";
+import useAlert from "@lib/hooks/useAlert"
+import { Fragment } from "react"
+import tw from "twin.macro"
 
-import { ErrorAlert, InfoAlert, SuccessAlert, WarningAlert } from "./Alert";
+import { ErrorAlert, InfoAlert, SuccessAlert, WarningAlert } from "./Alert"
 
 const Container = styled.div<{
-  type: "info" | "warning" | "error" | "success";
+  type: "info" | "warning" | "error" | "success"
 }>`
-  ${(props) =>
+  ${props =>
     props.type === "info" || props.type === "success"
       ? tw`bg-green-50 border-green-main text-green-600`
       : props.type === "error"
@@ -18,13 +18,13 @@ const Container = styled.div<{
       : props.type === "warning"
       ? tw`bg-yellow-100 border-yellow-600 text-yellow-800`
       : ""}
-`;
+`
 
 const Alerts = () => {
-  const { alert, showAlert } = useAlert();
+  const { alert, showAlert } = useAlert()
   const onClose = () => {
-    showAlert({ open: false });
-  };
+    showAlert({ open: false })
+  }
 
   return (
     <div
@@ -84,7 +84,7 @@ const Alerts = () => {
         </Transition>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Alerts;
+export default Alerts

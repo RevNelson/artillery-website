@@ -1,4 +1,4 @@
-import { css } from "twin.macro";
+import { css } from "twin.macro"
 
 const exoFonts = (fontsCDN: string) => {
   return css`
@@ -8,7 +8,7 @@ const exoFonts = (fontsCDN: string) => {
         format("truetype-variations");
       font-weight: 1 999;
     }
-  `;
-};
+  `
+}
 
-export default exoFonts;
+export default exoFonts

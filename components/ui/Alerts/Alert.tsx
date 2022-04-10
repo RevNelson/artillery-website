@@ -1,19 +1,19 @@
-import styled from "@emotion/styled";
-import tw from "twin.macro";
-import CheckCircleIcon from "@heroicons/react/solid/CheckCircleIcon";
-import ExclamationIcon from "@heroicons/react/solid/ExclamationIcon";
-import ExclamationCircleIcon from "@heroicons/react/solid/ExclamationCircleIcon";
-import InformationCircleIcon from "@heroicons/react/solid/InformationCircleIcon";
-import XIcon from "@heroicons/react/outline/XIcon";
+import styled from "@emotion/styled"
+import tw from "twin.macro"
+import CheckCircleIcon from "@heroicons/react/solid/CheckCircleIcon"
+import ExclamationIcon from "@heroicons/react/solid/ExclamationIcon"
+import ExclamationCircleIcon from "@heroicons/react/solid/ExclamationCircleIcon"
+import InformationCircleIcon from "@heroicons/react/solid/InformationCircleIcon"
+import XIcon from "@heroicons/react/outline/XIcon"
 
-import { AlertProps } from "@lib/types/alerts";
+import { AlertProps } from "@lib/types/alerts"
 
-const iconSize = "h-5 w-5";
+const iconSize = "h-5 w-5"
 
 const Container = styled.div<{
-  type: "info" | "warning" | "error" | "success";
+  type: "info" | "warning" | "error" | "success"
 }>`
-  ${(props) =>
+  ${props =>
     props.type === "info" || props.type === "success"
       ? tw`bg-green-50 border-green-main text-green-600`
       : props.type === "error"
@@ -21,10 +21,10 @@ const Container = styled.div<{
       : props.type === "warning"
       ? tw`bg-yellow-100 border-yellow-600 text-yellow-800`
       : ""}
-`;
+`
 
 const Alert = (props: AlertProps) => {
-  const { type, icon, primary, secondary, onClose } = props;
+  const { type, icon, primary, secondary, onClose } = props
 
   return (
     <div className="p-4">
@@ -59,8 +59,8 @@ const Alert = (props: AlertProps) => {
         </div>
       </div> */}
     </div>
-  );
-};
+  )
+}
 
 export const InfoAlert = (props: AlertProps) => {
   return (
@@ -69,8 +69,8 @@ export const InfoAlert = (props: AlertProps) => {
       type="info"
       icon={<InformationCircleIcon className={iconSize} />}
     />
-  );
-};
+  )
+}
 export const SuccessAlert = (props: AlertProps) => {
   return (
     <Alert
@@ -78,8 +78,8 @@ export const SuccessAlert = (props: AlertProps) => {
       type="success"
       icon={<CheckCircleIcon className={iconSize} />}
     />
-  );
-};
+  )
+}
 export const ErrorAlert = (props: AlertProps) => {
   return (
     <Alert
@@ -87,8 +87,8 @@ export const ErrorAlert = (props: AlertProps) => {
       type="error"
       icon={<ExclamationCircleIcon className={iconSize} />}
     />
-  );
-};
+  )
+}
 export const WarningAlert = (props: AlertProps) => {
   return (
     <Alert
@@ -96,5 +96,5 @@ export const WarningAlert = (props: AlertProps) => {
       type="warning"
       icon={<ExclamationIcon className={iconSize} />}
     />
-  );
-};
+  )
+}

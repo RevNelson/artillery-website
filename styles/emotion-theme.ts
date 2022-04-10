@@ -1,43 +1,43 @@
-import "@emotion/react";
+import "@emotion/react"
 
 declare module "@emotion/react" {
   export interface Theme {
-    font: string;
+    font: string
     colors: {
-      primary: string;
-      secondary: string;
-      electric: string;
-      ribbon: string;
+      primary: string
+      secondary: string
+      electric: string
+      ribbon: string
       text: {
-        primary: string;
-        secondary: string;
-      };
-      "primary-2": string;
-      "secondary-2": string;
-      hover: string;
-      "hover-1": string;
-      "hover-2": string;
-      "accents-1": string;
-      "accents-2": string;
-      "accents-3": string;
-      "accents-4": string;
-      "accents-5": string;
-      "accents-6": string;
-      "accents-7": string;
-      "accents-8": string;
-      "accents-9": string;
-      "accents-0": string;
+        primary: string
+        secondary: string
+      }
+      "primary-2": string
+      "secondary-2": string
+      hover: string
+      "hover-1": string
+      "hover-2": string
+      "accents-1": string
+      "accents-2": string
+      "accents-3": string
+      "accents-4": string
+      "accents-5": string
+      "accents-6": string
+      "accents-7": string
+      "accents-8": string
+      "accents-9": string
+      "accents-0": string
       violet: {
-        main: string;
-        light: string;
-      };
-      pink: string;
-      cyan: string;
-      blue: { dark: string; main: string; light: string };
-      green: string;
-      red: string;
-      selection: string;
-    };
+        main: string
+        light: string
+      }
+      pink: string
+      cyan: string
+      blue: { dark: string; main: string; light: string }
+      green: string
+      red: string
+      selection: string
+    }
   }
 }
 
@@ -80,4 +80,4 @@ export const emotionTheme = {
     red: "#da3c3c",
     selection: "#22b8cf",
   },
-};
+}

@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react"
 
-import { Cards } from "./components/Cards";
-import { PetsContext } from "./components/Pets";
+import { Cards } from "./components/Cards"
+import { PetsContext } from "./components/Pets"
 
-import catsData from "./mocks/cats.json";
+import catsData from "./mocks/cats.json"
 
 describe("Cards", () => {
   it("Should render five cat cards.", () => {
@@ -15,9 +15,9 @@ describe("Cards", () => {
         }}
       >
         <Cards />
-      </PetsContext.Provider>
-    );
+      </PetsContext.Provider>,
+    )
 
-    expect(screen.getAllByRole("article").length).toBe(5);
-  });
-});
+    expect(screen.getAllByRole("article").length).toBe(5)
+  })
+})

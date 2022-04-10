@@ -3,4 +3,4 @@ id
 databaseId
 title
 slug
-`;
+`

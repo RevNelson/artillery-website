@@ -1,4 +1,4 @@
-type SizeType = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+type SizeType = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full"
 
 type TopSizeType =
   | "t-none"
@@ -9,7 +9,7 @@ type TopSizeType =
   | "t-xl"
   | "t-2xl"
   | "t-3xl"
-  | "t-full";
+  | "t-full"
 
 type RightSizeType =
   | "r-none"
@@ -20,7 +20,7 @@ type RightSizeType =
   | "r-xl"
   | "r-2xl"
   | "r-3xl"
-  | "r-full";
+  | "r-full"
 
 type BottomSizeType =
   | "b-none"
@@ -31,7 +31,7 @@ type BottomSizeType =
   | "b-xl"
   | "b-2xl"
   | "b-3xl"
-  | "b-full";
+  | "b-full"
 
 type LeftSizeType =
   | "l-none"
@@ -42,11 +42,11 @@ type LeftSizeType =
   | "l-xl"
   | "l-2xl"
   | "l-3xl"
-  | "l-full";
+  | "l-full"
 
 export type SizesType =
   | SizeType
   | TopSizeType
   | RightSizeType
   | BottomSizeType
-  | LeftSizeType;
+  | LeftSizeType

@@ -1,4 +1,4 @@
-import { css } from "twin.macro";
+import { css } from "twin.macro"
 
 /*
 Font families defined by this CSS:
@@ -223,6 +223,6 @@ When using this, you will likely need to set font-variation-settings explicitly,
     font-display: swap;
     src: url("${fontsCDN}/Inter/Inter-italic.var.woff2") format("woff2");
   }
-`;
+`
 
-export default interFonts;
+export default interFonts

@@ -1,4 +1,4 @@
-import { css } from "twin.macro";
+import { css } from "twin.macro"
 
 const montserratFonts = (fontsCDN: string) => {
   return css`
@@ -10,7 +10,7 @@ const montserratFonts = (fontsCDN: string) => {
       font-weight: 1 999;
       font-display: swap;
     }
-  `;
-};
+  `
+}
 
-export default montserratFonts;
+export default montserratFonts

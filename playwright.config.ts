@@ -1,4 +1,4 @@
-import { PlaywrightTestConfig } from "@playwright/test";
+import { PlaywrightTestConfig } from "@playwright/test"
 const config: PlaywrightTestConfig = {
   use: {
     headless: false,
@@ -13,5 +13,5 @@ const config: PlaywrightTestConfig = {
       testDir: "./__e2e__",
     },
   ],
-};
-export default config;
+}
+export default config

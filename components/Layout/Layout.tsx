@@ -1,18 +1,18 @@
-import { ThemeProvider } from "@emotion/react";
-import { FC, ReactNode } from "react";
+import { ThemeProvider } from "@emotion/react"
+import { FC, ReactNode } from "react"
 
-import GlobalStyles from "@styles/emotion-global";
-import { emotionTheme } from "@styles/emotion-theme";
+import GlobalStyles from "@styles/emotion-global"
+import { emotionTheme } from "@styles/emotion-theme"
 
-import ScrollArrow from "@components/ui/ScrollArrow";
-import Alerts from "@components/ui/Alerts";
+import ScrollArrow from "@components/ui/ScrollArrow"
+import Alerts from "@components/ui/Alerts"
 
 // ####
 // #### Types
 // ####
 
 interface PropsType {
-  children: ReactNode | ReactNode[];
+  children: ReactNode | ReactNode[]
 }
 
 // ####
@@ -32,7 +32,7 @@ const Layout: FC<PropsType> = ({ children }) => {
       <ScrollArrow />
       <Alerts />
     </ThemeProvider>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

@@ -1,9 +1,9 @@
-import React from "react";
-import { css, Global } from "@emotion/react";
+import React from "react"
+import { css, Global } from "@emotion/react"
 
-import fonts from "./fonts";
+import fonts from "./fonts"
 
-const fontsCDN = `${process.env.NEXT_PUBLIC_CDN_BASE_URL}/fonts`;
+const fontsCDN = `${process.env.NEXT_PUBLIC_CDN_BASE_URL}/fonts`
 
 export const customStyles = css`
   ${fonts(fontsCDN)}
@@ -39,13 +39,13 @@ export const customStyles = css`
     -webkit-transform: scaleX(-1);
     -ms-transform: scaleX(-1);
   }
-`;
+`
 
 const GlobalStyles = () => (
   <>
     {/* <BaseStyles /> */}
     <Global styles={customStyles} />
   </>
-);
+)
 
-export default GlobalStyles;
+export default GlobalStyles

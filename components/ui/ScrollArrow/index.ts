@@ -1,1 +1,1 @@
-export { default } from "./ScrollArrow";
+export { default } from "./ScrollArrow"
