@@ -18,12 +18,14 @@
     "paths": {
       "@api": ["lib/api"],
       "@api/*": ["lib/api/*"],
-      "@components/*": ["components/*"],
       "@assets/*": ["assets/*"],
+      "@components/*": ["components/*"],
       "@lib": ["lib"],
       "@lib/*": ["lib/*"],
       "@pages": ["pages"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@styles": ["styles"],
+      "@styles/*": ["styles/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/i18n/config.js"],

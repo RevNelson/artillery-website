@@ -1,10 +1,10 @@
-import "../styles/fonts.css";
 import "../styles/globals.css";
 
 import type { AppProps } from "next/app";
 import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider";
 
 import { useApollo } from "@lib/apollo/client";
+import Layout from "@components/Layout";
 
 // ####
 // #### Dynamic Imports
@@ -21,7 +21,9 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ApolloProvider>
   );
 }
