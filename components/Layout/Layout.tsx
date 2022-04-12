@@ -5,6 +5,7 @@ import { ThemeProvider } from "@emotion/react"
 import GlobalStyles from "@styles/emotion-global"
 import { emotionTheme } from "@styles/emotion-theme"
 import Header from "./Header"
+import { ArtilleryPage_Acfhome_Hero, Maybe } from "@api/gql/types"
 
 // import ScrollArrow from "@components/ui/ScrollArrow"
 // import Alerts from "@components/ui/Alerts"
@@ -30,17 +31,18 @@ const ScrollArrow = dynamic(
 
 interface PropsType {
   children: ReactNode | ReactNode[]
+  hero?: Maybe<ArtilleryPage_Acfhome_Hero> | undefined
 }
 
 // ####
 // #### Component
 // ####
 
-const Layout: FC<PropsType> = ({ children }) => {
+const Layout: FC<PropsType> = ({ children, hero }) => {
   return (
     <ThemeProvider theme={emotionTheme}>
       <GlobalStyles />
-      <Header />
+      <Header hero={hero} />
       <main className="overflow-y-auto bg-white max-w-full relative overflow-x-hidden font-family min-h-screen">
         {children}
       </main>

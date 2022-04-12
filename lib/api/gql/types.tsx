@@ -281,9 +281,34 @@ export type ArtilleryPageToPreviewConnectionEdge = {
 export type ArtilleryPage_Acfhome = AcfFieldGroup & {
   /** The name of the ACF Field Group */
   fieldGroupName?: Maybe<Scalars['String']>;
-  hero?: Maybe<Scalars['String']>;
-  /** Try it out. */
-  test?: Maybe<Scalars['String']>;
+  hero?: Maybe<ArtilleryPage_Acfhome_Hero>;
+};
+
+/** Field Group */
+export type ArtilleryPage_Acfhome_Hero = AcfFieldGroup & {
+  /** The name of the ACF Field Group */
+  fieldGroupName?: Maybe<Scalars['String']>;
+  image?: Maybe<MediaItem>;
+  link?: Maybe<ArtilleryPage_Acfhome_Hero_Link>;
+  overlay?: Maybe<ArtilleryPage_Acfhome_Hero_Overlay>;
+  text?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** Field Group */
+export type ArtilleryPage_Acfhome_Hero_Link = AcfFieldGroup & {
+  /** The name of the ACF Field Group */
+  fieldGroupName?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+/** Field Group */
+export type ArtilleryPage_Acfhome_Hero_Overlay = AcfFieldGroup & {
+  color?: Maybe<Scalars['String']>;
+  /** The name of the ACF Field Group */
+  fieldGroupName?: Maybe<Scalars['String']>;
+  opacity?: Maybe<Scalars['Float']>;
 };
 
 /** Attribute object */
@@ -17545,7 +17570,10 @@ export type WritingSettings = {
       const result: PossibleTypesResultData = {
   "possibleTypes": {
     "AcfFieldGroup": [
-      "ArtilleryPage_Acfhome"
+      "ArtilleryPage_Acfhome",
+      "ArtilleryPage_Acfhome_Hero",
+      "ArtilleryPage_Acfhome_Hero_Link",
+      "ArtilleryPage_Acfhome_Hero_Overlay"
     ],
     "Attribute": [
       "SimpleAttribute",

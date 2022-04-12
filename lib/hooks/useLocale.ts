@@ -5,7 +5,7 @@ import { i18n as i18nConfig } from "@lib/i18n/config"
 import { isServer } from "@lib/utils/isServer"
 
 type LangsType = {
-  [any: string]: { name: string; flag: string }
+  [any: string]: { name: string; flag: string; nativeName: string }
 }
 
 const useLocale = () => {
@@ -20,16 +20,21 @@ const useLocale = () => {
     }
   }
 
-  const setLocale = (locale: string) => {
-    if (!isServer && i18nConfig.locales.includes(locale)) {
-      const currentLocale = getLocale()
-      if (!currentLocale || currentLocale !== locale) {
+  const setLocale = (newLocale: string) => {
+    if (!isServer && router.locales && router.locales.includes(newLocale)) {
+      const { pathname, asPath, query, locale: routerLocale } = router
+      const savedLocale = getLocale()
+
+      if (!savedLocale || savedLocale !== newLocale) {
         // Won't update if selected locale is same as saved
 
         // Set cookie so return visits will be in chosen locale
-        cookies.set("NEXT_LOCALE", locale)
-        // Replace current page request with request in new locale
-        router.replace(router.pathname, router.pathname, { locale })
+        cookies.set("NEXT_LOCALE", newLocale)
+      }
+
+      if (routerLocale !== newLocale) {
+        // Replace current page with page in new locale
+        router.replace({ pathname, query }, asPath, { locale: newLocale })
       }
     }
   }
@@ -38,7 +43,7 @@ const useLocale = () => {
     locale: router.locale || i18nConfig.defaultLocale,
     langs: i18nConfig.langs as LangsType,
     defaultLocale: i18nConfig.defaultLocale,
-    locales: i18nConfig.locales,
+    locales: router.locales || i18nConfig.locales,
     setLocale,
   }
 }

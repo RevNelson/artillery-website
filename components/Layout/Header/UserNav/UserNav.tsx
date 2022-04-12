@@ -1,7 +1,29 @@
-import QuestionMarkCircleIcon from "@heroicons/react/outline/QuestionMarkCircleIcon"
+import { Dispatch, SetStateAction } from "react"
 import ShoppingBagIcon from "@heroicons/react/outline/ShoppingBagIcon"
 
-const UserNav = () => {
+import ProfileMenu from "./ProfileMenu"
+import LanguageMenu from "./LanguageMenu"
+
+// ####
+// #### Dynamic Imports
+// ####
+
+const importOpts = {}
+
+// ####
+// #### Types
+// ####
+
+interface UsernavPropsType {
+  iconSize: string
+  setSignInOpen: Dispatch<SetStateAction<boolean>>
+}
+
+// ####
+// #### Component
+// ####
+
+const UserNav = ({ iconSize, setSignInOpen }: UsernavPropsType) => {
   return (
     <>
       <div className="flex-1 flex items-center justify-end">
@@ -10,17 +32,8 @@ const UserNav = () => {
         </a>
 
         <div className="flex items-center lg:ml-8">
-          {/* Help */}
-          <a href="#" className="p-2 text-white lg:hidden">
-            <span className="sr-only">Help</span>
-            <QuestionMarkCircleIcon className="w-6 h-6" aria-hidden="true" />
-          </a>
-          <a
-            href="#"
-            className="hidden text-sm font-medium text-white lg:block"
-          >
-            Help
-          </a>
+          <LanguageMenu />
+          <ProfileMenu setSignInOpen={setSignInOpen} iconSize={iconSize} />
 
           {/* Cart */}
           <div className="ml-4 flow-root lg:ml-8">

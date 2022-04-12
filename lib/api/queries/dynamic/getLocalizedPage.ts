@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client/core"
-import { pageCommonFragment } from "@lib/api/queries/fragments"
+import { pageCommonFragment } from "@lib/api/queries/fragments/common"
 import { i18n } from "@lib/i18n/config"
 
 type PropsType = {

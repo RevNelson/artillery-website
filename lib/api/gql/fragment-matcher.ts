@@ -7,7 +7,10 @@
       const result: PossibleTypesResultData = {
   "possibleTypes": {
     "AcfFieldGroup": [
-      "ArtilleryPage_Acfhome"
+      "ArtilleryPage_Acfhome",
+      "ArtilleryPage_Acfhome_Hero",
+      "ArtilleryPage_Acfhome_Hero_Link",
+      "ArtilleryPage_Acfhome_Hero_Overlay"
     ],
     "Attribute": [
       "SimpleAttribute",

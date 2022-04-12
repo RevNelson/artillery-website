@@ -1,10 +1,12 @@
-import { Fragment, useState } from "react"
-import { Dialog, Transition } from "@headlessui/react"
+import { useState } from "react"
+import Headroom from "react-headroom"
 import { MenuIcon, SearchIcon } from "@heroicons/react/outline"
+
 import MobileMenu from "./MobileMenu"
 import TopNav from "./TopNav"
 import MainMenu from "./MainMenu"
 import UserNav from "./UserNav"
+import { ArtilleryPage_Acfhome_Hero, Maybe } from "@api/gql/types"
 
 const navigation = {
   categories: [
@@ -92,67 +94,62 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
 }
 
-export const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+type PropsType = {
+  hero?: Maybe<ArtilleryPage_Acfhome_Hero> | undefined
+}
+
+export const Header = ({ hero }: PropsType) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
+  const [signInOpen, setSignInOpen] = useState<boolean>(false)
+  const [searchOpen, setSearchOpen] = useState<boolean>(false)
+
   return (
     <>
-      <div className="bg-white">
-        <Transition.Root show={mobileMenuOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className="fixed inset-0 flex z-40 lg:hidden"
-            onClose={setMobileMenuOpen}
-          >
-            <Transition.Child
-              as={Fragment}
-              enter="transition-opacity ease-linear duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity ease-linear duration-300"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-25" />
-            </Transition.Child>
+      <MobileMenu
+        open={mobileMenuOpen}
+        setOpen={setMobileMenuOpen}
+        navigation={navigation}
+        classNames={classNames}
+      />
 
-            <Transition.Child
-              as={Fragment}
-              enter="transition ease-in-out duration-300 transform"
-              enterFrom="-translate-x-full"
-              enterTo="translate-x-0"
-              leave="transition ease-in-out duration-300 transform"
-              leaveFrom="translate-x-0"
-              leaveTo="-translate-x-full"
-            >
-              <MobileMenu
-                setMobileMenuOpen={setMobileMenuOpen}
-                navigation={navigation}
-                classNames={classNames}
+      <div className="relative bg-gray-900">
+        {/* Decorative image and overlay */}
+        {hero && (
+          <>
+            {hero.image?.sourceUrl && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 overflow-hidden"
+              >
+                <img
+                  src={hero.image.sourceUrl}
+                  alt=""
+                  className="w-full h-full object-center object-cover"
+                />
+              </div>
+            )}
+            {hero.overlay && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  backgroundColor: hero.overlay.color || "#111827",
+                  opacity: hero.overlay.opacity || 0.5,
+                }}
               />
-            </Transition.Child>
-          </Dialog>
-        </Transition.Root>
+            )}
+          </>
+        )}
 
-        {/* Hero section */}
-        <div className="relative bg-gray-900">
-          {/* Decorative image and overlay */}
-          <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-            <img
-              src="https://tailwindui.com/img/ecommerce-images/home-page-01-hero-full-width.jpg"
-              alt=""
-              className="w-full h-full object-center object-cover"
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gray-900 opacity-50"
-          />
-
-          {/* Navigation */}
-          <header className="relative z-10">
+        {/* Navigation */}
+        <header className="relative z-10">
+          <Headroom
+            style={{ zIndex: 11 }}
+            upTolerance={2}
+            className={`font-family h-26 bg-opacity-100`}
+          >
             <nav aria-label="Top">
-              {/* Top navigation */}
-              <TopNav />
+              {/* <TopNav /> */}
 
               {/* Secondary navigation */}
               <div className="backdrop-blur-md backdrop-filter bg-opacity-10 bg-white">
@@ -204,31 +201,38 @@ export const Header = () => {
                         />
                       </a>
 
-                      <UserNav />
+                      <UserNav
+                        iconSize="h-6 w-6"
+                        setSignInOpen={setSignInOpen}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </nav>
-          </header>
+          </Headroom>
+        </header>
 
+        {hero && (
           <div className="relative max-w-3xl mx-auto py-32 px-6 flex flex-col items-center text-center sm:py-64 lg:px-0">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white lg:text-6xl">
-              New arrivals are here
-            </h1>
-            <p className="mt-4 text-xl text-white">
-              The new arrivals have, well, newly arrived. Check out the latest
-              options from our summer small-batch release while they&apos;re
-              still in stock.
-            </p>
-            <a
-              href="#"
-              className="mt-8 inline-block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100"
-            >
-              Shop New Arrivals
-            </a>
+            {hero.title && (
+              <h1 className="text-4xl font-extrabold tracking-tight text-white lg:text-6xl">
+                {hero.title}
+              </h1>
+            )}
+            {hero.text && (
+              <p className="mt-4 text-xl text-white">{hero.text}</p>
+            )}
+            {hero.link && (
+              <a
+                href={hero.link.url || "#"}
+                className="mt-8 inline-block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100"
+              >
+                {hero.link.label}
+              </a>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </>
   )

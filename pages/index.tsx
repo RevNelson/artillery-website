@@ -1,4 +1,5 @@
 // import dynamic from "next/dynamic";
+import { ReactElement } from "react"
 import Link from "next/link"
 import { GetStaticProps, InferGetStaticPropsType } from "next/types"
 
@@ -6,30 +7,26 @@ import { initializeApollo, addApolloState } from "@lib/apollo/client"
 import useLocale from "@lib/hooks/useLocale"
 import { ArtilleryPage } from "@api/gql/types"
 import getLocalizedPage from "@api/queries/dynamic/getLocalizedPage"
-import FlagIcon from "@components/FlagIcon"
+import { heroFragment } from "@api/queries/hero"
+
+import Layout from "@components/Layout"
 
 // ####
 // #### Dynamic Imports
 // ####
 
-// const importOpts = {};
-
-// const FlagIcon = dynamic(() => import("@components/FlagIcon"), importOpts);
-
 // ####
 // #### Component
 // ####
 
-export default function Home({
+export default function Page({
   data,
   loading,
   error,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { locale, locales, langs, setLocale } = useLocale()
 
-  const page = data.artilleryPages.nodes[0] as ArtilleryPage
-
-  const acf = page.ACFhome
+  const page = (data?.artilleryPages.nodes[0] as ArtilleryPage) || null
 
   return (
     <div className="font-sans">
@@ -47,15 +44,20 @@ export default function Home({
           </button>
         )
       })}
-      {acf?.hero && <div>{acf.hero}</div>}
-      <FlagIcon
-        locale={locale}
-        square={false}
-        size={32}
-        rounded={"rounded-lg"}
-      />
     </div>
   )
+}
+
+// ####
+// #### Layout
+// ####
+
+Page.getLayout = function getLayout(page: ReactElement) {
+  const data = page.props.data || null
+  const pageData = (data?.artilleryPages.nodes[0] as ArtilleryPage) || null
+  const hero = pageData?.ACFhome?.hero
+
+  return <Layout hero={hero}>{page}</Layout>
 }
 
 // ####
@@ -67,7 +69,7 @@ export const getStaticProps: GetStaticProps = async context => {
   const locale = context.locale
   const slug = "home"
 
-  const acfFields = `ACF${slug} { hero }`
+  const acfFields = `ACF${slug} { ${heroFragment} }`
 
   const query = getLocalizedPage({ locale, slug, acfFields })
 
@@ -75,7 +77,7 @@ export const getStaticProps: GetStaticProps = async context => {
     query,
   })
 
-  const staticProps = { data, loading, error: error || null }
+  const staticProps = { data: data || null, loading, error: error || null }
 
   addApolloState(client, staticProps)
 
