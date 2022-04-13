@@ -1,25 +1,21 @@
 import { FC, ReactNode } from "react"
-import dynamic from "next/dist/shared/lib/dynamic"
+import dynamic from "next/dynamic"
 import { ThemeProvider } from "@emotion/react"
 
-import GlobalStyles from "@styles/emotion-global"
-import { emotionTheme } from "@styles/emotion-theme"
-import Header from "./Header"
 import { ArtilleryPage_Acfhome_Hero, Maybe } from "@api/gql/types"
+import { emotionTheme } from "@styles/emotion-theme"
 
-// import ScrollArrow from "@components/ui/ScrollArrow"
-// import Alerts from "@components/ui/Alerts"
+import Header from "./Header"
 
 // ####
 // #### Dynamic Imports
 // ####
 
-const importOpts = {}
+const importOpts = { ssr: false }
 
 const Alerts = dynamic(() => import("@components/ui/Alerts"), importOpts)
-// const Header = dynamic(() => import("@components/ui/Layout/Header"), importOpts)
-// const Footer = dynamic(() => import("@components/ui/Layout/Footer"), importOpts)
-// const GlobalStyles = dynamic(() => import("styles/GlobalStyles"), importOpts)
+// const Footer = dynamic(() => import("@components/ui/Layout/Footer"), {})
+const GlobalStyles = dynamic(() => import("@styles/emotion-global"), {})
 const ScrollArrow = dynamic(
   () => import("@components/ui/ScrollArrow"),
   importOpts,

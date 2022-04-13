@@ -1,24 +1,15 @@
-import styled from "@emotion/styled"
+import { Fragment } from "react"
 import { Transition } from "@headlessui/react"
 
 import useAlert from "@lib/hooks/useAlert"
-import { Fragment } from "react"
-import tw from "twin.macro"
 
 import { ErrorAlert, InfoAlert, SuccessAlert, WarningAlert } from "./Alert"
 
-const Container = styled.div<{
-  type: "info" | "warning" | "error" | "success"
-}>`
-  ${props =>
-    props.type === "info" || props.type === "success"
-      ? tw`bg-green-50 border-green-main text-green-600`
-      : props.type === "error"
-      ? tw`bg-red-100 border-red-main text-red-main`
-      : props.type === "warning"
-      ? tw`bg-yellow-100 border-yellow-600 text-yellow-800`
-      : ""}
-`
+import { StyledContainer } from "./style"
+
+// ####
+// #### Component
+// ####
 
 const Alerts = () => {
   const { alert, showAlert } = useAlert()
@@ -43,7 +34,7 @@ const Alerts = () => {
           leaveTo="transform opacity-0 scale-95"
           // className="fixed right-0 top-0 pr-8 w-fit z-50"
         >
-          <Container
+          <StyledContainer
             type={alert.type || "error"}
             className={`relative font-family border-t-4 my-2 max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden`}
             role="alert"
@@ -80,7 +71,7 @@ const Alerts = () => {
                 onClose={() => onClose()}
               />
             )}
-          </Container>
+          </StyledContainer>
         </Transition>
       </div>
     </div>

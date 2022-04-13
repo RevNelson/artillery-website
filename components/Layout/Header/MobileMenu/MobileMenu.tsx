@@ -1,32 +1,128 @@
-import { Dispatch, Fragment, SetStateAction } from "react"
+import { Fragment, useState } from "react"
 import { Dialog, Tab, Transition } from "@headlessui/react"
+import MenuIcon from "@heroicons/react/outline/MenuIcon"
+import SearchIcon from "@heroicons/react/outline/SearchIcon"
 import XIcon from "@heroicons/react/outline/XIcon"
 
 import CurrencySelector from "../CurrencySelector"
 
 // ####
-// #### Types
+// #### Variables
 // ####
 
-type MobileMenuProps = {
-  open: boolean
-  setOpen: Dispatch<SetStateAction<boolean>>
-  navigation: any
-  classNames: any
+const navigation = {
+  categories: [
+    {
+      name: "Women",
+      featured: [
+        {
+          name: "New Arrivals",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
+          imageAlt:
+            "Models sitting back to back, wearing Basic Tee in black and bone.",
+        },
+        {
+          name: "Basic Tees",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
+          imageAlt:
+            "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
+        },
+        {
+          name: "Accessories",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg",
+          imageAlt:
+            "Model wearing minimalist watch with black wristband and white watch face.",
+        },
+        {
+          name: "Carry",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-04.jpg",
+          imageAlt:
+            "Model opening tan leather long wallet with credit card pockets and cash pouch.",
+        },
+      ],
+    },
+    {
+      name: "Men",
+      featured: [
+        {
+          name: "New Arrivals",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
+          imageAlt:
+            "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
+        },
+        {
+          name: "Basic Tees",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
+          imageAlt: "Model wearing light heather gray t-shirt.",
+        },
+        {
+          name: "Accessories",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
+          imageAlt:
+            "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
+        },
+        {
+          name: "Carry",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
+          imageAlt:
+            "Model putting folded cash into slim card holder olive leather wallet with hand stitching.",
+        },
+      ],
+    },
+  ],
+  pages: [
+    { name: "Company", href: "#" },
+    { name: "Stores", href: "#" },
+  ],
+}
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ")
 }
 
 // ####
 // #### Component
 // ####
 
-const MobileMenu = ({
-  open,
-  setOpen,
-  navigation,
-  classNames,
-}: MobileMenuProps) => {
+const MobileMenu = () => {
+  const [open, setOpen] = useState<boolean>(false)
   return (
     <>
+      {/* Header Buttons */}
+      <div className="flex-1 flex items-center lg:hidden">
+        <button
+          type="button"
+          className="-ml-2 p-2 text-white"
+          onClick={() => setOpen(true)}
+        >
+          <span className="sr-only">Open menu</span>
+          <MenuIcon className="h-6 w-6" aria-hidden="true" />
+        </button>
+
+        {/* Search */}
+        <a href="#" className="ml-2 p-2 text-white">
+          <span className="sr-only">Search</span>
+          <SearchIcon className="w-6 h-6" aria-hidden="true" />
+        </a>
+      </div>
+
+      {/* Fly out menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"

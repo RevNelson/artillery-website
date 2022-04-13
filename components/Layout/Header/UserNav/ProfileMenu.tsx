@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, SetStateAction } from "react"
+import { Fragment, useState } from "react"
 import { useRouter } from "next/dist/client/router"
 import { Menu, Transition } from "@headlessui/react"
 import ClipboardCheckIcon from "@heroicons/react/outline/ClipboardCheckIcon"
@@ -12,25 +12,12 @@ import userMenu from "../userMenu"
 import Link from "@components/Link"
 
 // ####
-// #### Dynamic Imports
-// ####
-
-const importOpts = {}
-
-// ####
-// #### Types
-// ####
-
-type PropsType = {
-  iconSize: string
-  setSignInOpen: Dispatch<SetStateAction<boolean>>
-}
-
-// ####
 // #### Component
 // ####
 
-const ProfileMenu = ({ iconSize, setSignInOpen }: PropsType) => {
+const ProfileMenu = () => {
+  const [signInOpen, setSignInOpen] = useState<boolean>(false)
+
   const router = useRouter()
 
   const { loggedIn, logout } = useAuth()
@@ -50,7 +37,7 @@ const ProfileMenu = ({ iconSize, setSignInOpen }: PropsType) => {
                 } hover:text-gray-200`}
               >
                 <span className="sr-only">Open user menu</span>
-                <UserIcon className={" " + iconSize} />
+                <UserIcon className="h-6 w-6" />
               </Menu.Button>
             </div>
             <Transition

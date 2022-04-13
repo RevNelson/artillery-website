@@ -1,29 +1,13 @@
-import { Dispatch, SetStateAction } from "react"
 import ShoppingBagIcon from "@heroicons/react/outline/ShoppingBagIcon"
 
 import ProfileMenu from "./ProfileMenu"
 import LanguageMenu from "./LanguageMenu"
 
 // ####
-// #### Dynamic Imports
-// ####
-
-const importOpts = {}
-
-// ####
-// #### Types
-// ####
-
-interface UsernavPropsType {
-  iconSize: string
-  setSignInOpen: Dispatch<SetStateAction<boolean>>
-}
-
-// ####
 // #### Component
 // ####
 
-const UserNav = ({ iconSize, setSignInOpen }: UsernavPropsType) => {
+const UserNav = () => {
   return (
     <>
       <div className="flex-1 flex items-center justify-end">
@@ -33,7 +17,7 @@ const UserNav = ({ iconSize, setSignInOpen }: UsernavPropsType) => {
 
         <div className="flex items-center lg:ml-8">
           <LanguageMenu />
-          <ProfileMenu setSignInOpen={setSignInOpen} iconSize={iconSize} />
+          <ProfileMenu />
 
           {/* Cart */}
           <div className="ml-4 flow-root lg:ml-8">
