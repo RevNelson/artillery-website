@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from "@apollo/client"
 
 //
 // FRAGMENTS
@@ -11,13 +11,13 @@ firstName
 lastName
 username
 email
-`;
+`
 
 export const userAuthFragment = `
 user {
   ${userAuthBaseFragment}
 }
-`;
+`
 
 //
 // MUTATIONS
@@ -29,7 +29,7 @@ export const registerMutation = gql`
       ${userAuthFragment}
     }
   }
-`;
+`
 export const loginMutation = gql`
   mutation LoginUser($cookiesInput: LoginWithCookiesInput!, $jwtInput: LoginInput!) {
     loginWithCookies(input: $cookiesInput) {
@@ -39,7 +39,7 @@ export const loginMutation = gql`
       ${userAuthFragment}
     }
   }
-`;
+`
 
 export const logoutMutation = gql`
   mutation LogoutUser($input: LogoutInput!) {
@@ -47,7 +47,7 @@ export const logoutMutation = gql`
       status
     }
   }
-`;
+`
 
 export const refreshMutation = gql`
   mutation RefreshAuthToken($input: RefreshJwtAuthTokenInput!) {
@@ -55,4 +55,4 @@ export const refreshMutation = gql`
       authToken
     }
   }
-`;
+`

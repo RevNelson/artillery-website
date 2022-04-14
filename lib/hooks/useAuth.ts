@@ -1,20 +1,20 @@
-import { useCallback, useEffect } from "react";
-import { ApolloQueryResult, gql, useReactiveVar } from "@apollo/client";
-import jwt_decode, { JwtPayload } from "jwt-decode";
+import { useCallback, useEffect } from "react"
+import { ApolloQueryResult, gql, useReactiveVar } from "@apollo/client"
+import jwt_decode, { JwtPayload } from "jwt-decode"
 
-import { loggedInVar, userVar } from "@lib/apollo/cache";
-import { InMemoryAuthTokenType } from "@lib/types/auth";
-import { initializeApollo } from "@lib/apollo/client";
+import { loggedInVar, userVar } from "@lib/apollo/cache"
+import { InMemoryAuthTokenType } from "@lib/types/auth"
+import { initializeApollo } from "@lib/apollo/client"
 import {
   loginMutation,
   logoutMutation,
   refreshMutation,
   registerMutation,
-} from "@api/mutations/auth";
-import { RegisterUserInput, User } from "@api/gql/types";
-import { authConstants } from "@lib/constants";
-import { isServer } from "@lib/utils/isServer";
-import useAlert from "./useAlert";
+} from "@api/mutations/auth"
+import { RegisterUserInput, User } from "@api/gql/types"
+import { authConstants } from "@lib/constants"
+import { isServer } from "@lib/utils/isServer"
+import useAlert from "./useAlert"
 
 const userQuery = gql`
   query UserQuery($id: ID!) {
@@ -27,108 +27,108 @@ const userQuery = gql`
       email
     }
   }
-`;
+`
 
 const useAuth = () => {
-  const loggedIn = useReactiveVar(loggedInVar);
-  const user = useReactiveVar(userVar);
+  const loggedIn = useReactiveVar(loggedInVar)
+  const user = useReactiveVar(userVar)
 
-  const { showAlert } = useAlert();
+  const { showAlert } = useAlert()
 
   // Setters
 
   const setAuthToken = useCallback((serverAuthToken: string) => {
     if (!isServer) {
       const authTokenData = jwt_decode<{
-        iss: string;
-        iat: number;
-        nbf: number;
-        exp: number;
-        data: { user: { id: string } };
-      }>(serverAuthToken);
+        iss: string
+        iat: number
+        nbf: number
+        exp: number
+        data: { user: { id: string } }
+      }>(serverAuthToken)
 
       const authToken = {
         authToken: serverAuthToken,
         userId: authTokenData.data.user.id,
         authExpiration: authTokenData.exp || null,
-      };
+      }
 
       localStorage.setItem(
         authConstants.AUTH_TOKEN_KEY,
-        JSON.stringify(authToken)
-      );
+        JSON.stringify(authToken),
+      )
     }
-  }, []);
+  }, [])
 
   const setLoggedIn = (loggedIn: boolean) => {
-    const currentAuth = loggedInVar();
-    loggedIn !== currentAuth && loggedInVar(loggedIn);
-  };
+    const currentAuth = loggedInVar()
+    loggedIn !== currentAuth && loggedInVar(loggedIn)
+  }
 
   const setUser = (user?: User) => {
-    const currentUser = userVar();
-    currentUser !== user && userVar(user);
-  };
+    const currentUser = userVar()
+    currentUser !== user && userVar(user)
+  }
 
   const setRefreshToken = (refreshToken: string, callback?: () => any) => {
     if (!isServer) {
-      console.log("REFRESH", jwt_decode<JwtPayload>(refreshToken));
+      console.log("REFRESH", jwt_decode<JwtPayload>(refreshToken))
 
-      localStorage.setItem(authConstants.REFRESH_TOKEN_KEY, refreshToken);
-      localStorage.removeItem(authConstants.LOGGED_OUT_KEY);
-      setLoggedIn(true);
+      localStorage.setItem(authConstants.REFRESH_TOKEN_KEY, refreshToken)
+      localStorage.removeItem(authConstants.LOGGED_OUT_KEY)
+      setLoggedIn(true)
 
       if (callback) {
-        callback();
+        callback()
       }
     }
-  };
+  }
 
   // Getters
 
   const getAuthToken = useCallback((): InMemoryAuthTokenType | undefined => {
     if (!isServer) {
-      const authToken = localStorage.getItem(authConstants.AUTH_TOKEN_KEY);
+      const authToken = localStorage.getItem(authConstants.AUTH_TOKEN_KEY)
       if (authToken) {
-        return JSON.parse(authToken);
+        return JSON.parse(authToken)
       }
     }
-  }, []);
+  }, [])
 
   const getRefreshToken = useCallback(() => {
     if (!isServer) {
-      return localStorage.getItem(authConstants.REFRESH_TOKEN_KEY);
+      return localStorage.getItem(authConstants.REFRESH_TOKEN_KEY)
     }
-    return null;
-  }, []);
+    return null
+  }, [])
 
   const isTokenExpired = useCallback((): boolean => {
     if (!isServer) {
-      const now = Date.now();
-      const authToken = getAuthToken();
+      const now = Date.now()
+      const authToken = getAuthToken()
       if (authToken) {
         const expiration = authToken.authExpiration
           ? authToken.authExpiration * 1000
-          : now;
-        return authToken ? expiration - now < 1000 : true;
+          : now
+        return authToken ? expiration - now < 1000 : true
       }
     }
-    return true;
-  }, [getAuthToken]);
+    return true
+  }, [getAuthToken])
 
   // Refresh Token
 
   const refreshAuthToken = useCallback(async () => {
-    const jwtRefreshToken = getRefreshToken();
+    const jwtRefreshToken = getRefreshToken()
 
     if (jwtRefreshToken) {
       // Refresh Token
 
-      console.log("REFRESHING");
+      console.log("REFRESHING")
 
-      const client = initializeApollo({});
+      const client = initializeApollo({})
 
-      const input = { jwtRefreshToken };
+      const input = { jwtRefreshToken }
 
       if (client) {
         await client
@@ -136,36 +136,36 @@ const useAuth = () => {
             mutation: refreshMutation,
             variables: { input },
           })
-          .then((response) => {
+          .then(response => {
             const authToken = response.data.refreshJwtAuthToken
               ? response.data.refreshJwtAuthToken.authToken
-              : null;
+              : null
             if (authToken) {
               // Refresh successful
-              setAuthToken(authToken);
-              !loggedIn && setLoggedIn(true);
+              setAuthToken(authToken)
+              !loggedIn && setLoggedIn(true)
             } else {
               // Refresh failed. User must login
-              loggedIn && setLoggedIn(false);
+              loggedIn && setLoggedIn(false)
             }
-          });
+          })
       }
     } else {
       // No authentication method. User must login.
-      loggedIn && setLoggedIn(false);
+      loggedIn && setLoggedIn(false)
     }
-  }, [getRefreshToken, loggedIn, setAuthToken]);
+  }, [getRefreshToken, loggedIn, setAuthToken])
 
   useEffect(() => {
-    const tokenExpired = isTokenExpired();
+    const tokenExpired = isTokenExpired()
 
     if (tokenExpired) {
       // Invalid Token
 
-      refreshAuthToken();
+      refreshAuthToken()
     } else {
       // Token is valid
-      !loggedIn && setLoggedIn(true);
+      !loggedIn && setLoggedIn(true)
     }
   }, [
     loggedIn,
@@ -173,15 +173,15 @@ const useAuth = () => {
     isTokenExpired,
     setAuthToken,
     refreshAuthToken,
-  ]);
+  ])
 
   // Populate User
 
   const fetchUser = useCallback(async () => {
-    const client = initializeApollo({});
+    const client = initializeApollo({})
 
     if (client) {
-      const authData = getAuthToken();
+      const authData = getAuthToken()
 
       if (authData?.userId) {
         const userReturnData: ApolloQueryResult<{ user: User }> =
@@ -189,39 +189,39 @@ const useAuth = () => {
             query: userQuery,
             variables: { id: authData.userId },
             errorPolicy: "all",
-          });
+          })
 
         if (userReturnData?.data) {
-          const { ...userData } = userReturnData.data.user;
+          const { ...userData } = userReturnData.data.user
 
-          userData && setUser(userData);
+          userData && setUser(userData)
         }
       }
     }
-  }, [getAuthToken]);
+  }, [getAuthToken])
 
   useEffect(() => {
     if (loggedIn && !user) {
-      fetchUser();
+      fetchUser()
     }
-  });
+  })
 
   // Login
 
   const login = async (
     userInput: { login: string; password: string; rememberMe: boolean },
-    callback?: () => any
+    callback?: () => any,
   ) => {
-    let errors: string | null = null;
+    let errors: string | null = null
     if (!isServer) {
-      const client = initializeApollo({});
+      const client = initializeApollo({})
       const cookiesInput = {
         ...userInput,
-      };
+      }
       const jwtInput = {
         username: userInput.login,
         password: userInput.password,
-      };
+      }
 
       await client
         .mutate({
@@ -229,15 +229,15 @@ const useAuth = () => {
           variables: { cookiesInput, jwtInput },
           errorPolicy: "all",
         })
-        .then((response) => {
+        .then(response => {
           if (response.data?.loginWithCookies?.status === "SUCCESS") {
-            const user: User = response.data.login.user;
-            setUser(user);
+            const user: User = response.data.login.user
+            setUser(user)
 
-            user.jwtAuthToken && setAuthToken(user.jwtAuthToken);
-            user.jwtRefreshToken && setRefreshToken(user.jwtRefreshToken);
+            user.jwtAuthToken && setAuthToken(user.jwtAuthToken)
+            user.jwtRefreshToken && setRefreshToken(user.jwtRefreshToken)
 
-            setLoggedIn(true);
+            setLoggedIn(true)
 
             showAlert({
               open: true,
@@ -248,30 +248,30 @@ const useAuth = () => {
                 user?.lastName && ` ${user.lastName}`
               }!`,
               secondary: "You are now logged in.",
-            });
+            })
 
-            callback && callback();
+            callback && callback()
           }
 
           if (response.errors) {
-            const error = response.errors[0];
+            const error = response.errors[0]
 
-            ["invalid_email", "incorrect_password"].includes(error.message) &&
-              (errors = "Email or password incorrect.");
+            ;["invalid_email", "incorrect_password"].includes(error.message) &&
+              (errors = "Email or password incorrect.")
           }
         })
-        .catch((err) => {
-          console.log("useAuth Login Error", err);
-        });
+        .catch(err => {
+          console.log("useAuth Login Error", err)
+        })
     }
-    return { errors };
-  };
+    return { errors }
+  }
 
   // Logout
 
   const logout = async (callback?: () => any) => {
     if (!isServer) {
-      const client = initializeApollo({});
+      const client = initializeApollo({})
 
       await client
         .mutate({
@@ -279,50 +279,50 @@ const useAuth = () => {
           variables: { input: {} },
           errorPolicy: "all",
         })
-        .then(async (r) => {
-          localStorage.removeItem(authConstants.AUTH_TOKEN_KEY);
-          localStorage.removeItem(authConstants.REFRESH_TOKEN_KEY);
+        .then(async r => {
+          localStorage.removeItem(authConstants.AUTH_TOKEN_KEY)
+          localStorage.removeItem(authConstants.REFRESH_TOKEN_KEY)
 
           localStorage.setItem(
             authConstants.LOGGED_OUT_KEY,
-            JSON.stringify(Date.now())
-          );
+            JSON.stringify(Date.now()),
+          )
 
-          setLoggedIn(false);
-          setUser();
+          setLoggedIn(false)
+          setUser()
 
           showAlert({
             open: true,
             primary: "Logged out.",
             secondary: "",
             type: "info",
-          });
+          })
 
-          await client.refetchQueries({ include: ["CartQuery"] });
+          await client.refetchQueries({ include: ["CartQuery"] })
 
           if (callback) {
-            callback();
+            callback()
           }
         })
-        .catch((err) => {
-          console.log("useAuth Logout Error", err);
-        });
+        .catch(err => {
+          console.log("useAuth Logout Error", err)
+        })
     }
-  };
+  }
 
   const registerUser = async ({
     input,
     callback,
   }: {
-    input: RegisterUserInput;
-    callback?: () => any;
+    input: RegisterUserInput
+    callback?: () => any
   }) => {
     if (!isServer) {
-      const client = initializeApollo({});
+      const client = initializeApollo({})
 
-      let error: string | null = null;
+      let error: string | null = null
 
-      console.log("INPUT", input);
+      console.log("INPUT", input)
 
       await client
         .mutate({
@@ -330,19 +330,19 @@ const useAuth = () => {
           variables: { input },
           errorPolicy: "all",
         })
-        .then(async (r) => {
-          console.log("REGISTER RES", r);
+        .then(async r => {
+          console.log("REGISTER RES", r)
 
-          const { data, errors } = r;
+          const { data, errors } = r
 
-          const registerUser = data?.registerUser;
+          const registerUser = data?.registerUser
           if (registerUser) {
-            const user = (registerUser.user as User) || null;
+            const user = (registerUser.user as User) || null
 
             if (user) {
-              user.jwtAuthToken && setAuthToken(user.jwtAuthToken);
+              user.jwtAuthToken && setAuthToken(user.jwtAuthToken)
               user.jwtRefreshToken &&
-                setRefreshToken(user.jwtRefreshToken, callback);
+                setRefreshToken(user.jwtRefreshToken, callback)
 
               showAlert({
                 open: true,
@@ -351,7 +351,7 @@ const useAuth = () => {
                   user?.firstName && ` ${user.firstName}`
                 }${user?.lastName && ` ${user.lastName}`}!`,
                 secondary: "You are now registered.",
-              });
+              })
             }
             // TODO - Handle error cases
           }
@@ -359,20 +359,20 @@ const useAuth = () => {
           if (errors && errors.length > 0) {
             if (
               errors[0].message.includes(
-                "This email address is already registered."
+                "This email address is already registered.",
               )
             )
-              error = "This email address is already registered.";
+              error = "This email address is already registered."
           }
 
-          console.log("REG ERR", error);
+          console.log("REG ERR", error)
         })
-        .catch((e) => {
-          console.log("REGISTER ERROR", e);
-        });
-      return error;
+        .catch(e => {
+          console.log("REGISTER ERROR", e)
+        })
+      return error
     }
-  };
+  }
 
   return {
     loggedIn,
@@ -385,7 +385,7 @@ const useAuth = () => {
     setLoggedIn,
     setRefreshToken,
     setUser,
-  };
-};
+  }
+}
 
-export default useAuth;
+export default useAuth

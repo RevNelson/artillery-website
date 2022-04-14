@@ -1,31 +1,31 @@
-import { ChangeEvent, MouseEvent, useState } from "react";
-import validator from "validator";
+import { ChangeEvent, MouseEvent, useState } from "react"
+import validator from "validator"
 
-type SubmitEventType = MouseEvent<HTMLButtonElement>;
+type SubmitEventType = MouseEvent<HTMLButtonElement>
 
 const InputForm = () => {
   const [input, setInput] = useState({
     email: "",
     password: "",
     confirmPassword: "",
-  });
+  })
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState("")
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
-  };
+    setInput({ ...input, [e.target.name]: e.target.value })
+  }
 
   const handleClick = (e: SubmitEventType) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!validator.isEmail(input.email)) {
-      setError("The email you input is invalid.");
+      setError("The email you input is invalid.")
     } else if (input.password.length < 5) {
-      setError("The password you entered should be 5 or more characters.");
+      setError("The password you entered should be 5 or more characters.")
     } else if (input.password !== input.confirmPassword) {
-      setError("The passwords don't match. Try again.");
+      setError("The passwords don't match. Try again.")
     }
-  };
+  }
 
   return (
     <>
@@ -68,7 +68,7 @@ const InputForm = () => {
         </button>
       </form>
     </>
-  );
-};
+  )
+}
 
-export default InputForm;
+export default InputForm

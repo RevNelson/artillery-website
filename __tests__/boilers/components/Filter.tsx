@@ -1,7 +1,7 @@
 type FilterPropsType = {
-  filters: any;
-  setFilters: any;
-};
+  filters: any
+  setFilters: any
+}
 
 export const Filter = ({ filters, setFilters }: FilterPropsType) => {
   return (
@@ -14,7 +14,7 @@ export const Filter = ({ filters, setFilters }: FilterPropsType) => {
               name="favorite"
               id="favorite"
               className="form-select"
-              onChange={(e) =>
+              onChange={e =>
                 setFilters({ ...filters, favored: e.target.value })
               }
             >
@@ -29,9 +29,7 @@ export const Filter = ({ filters, setFilters }: FilterPropsType) => {
               name="gender"
               id="gender"
               className="form-select"
-              onChange={(e) =>
-                setFilters({ ...filters, gender: e.target.value })
-              }
+              onChange={e => setFilters({ ...filters, gender: e.target.value })}
             >
               <option value="any">Any</option>
               <option value="male">Male</option>
@@ -41,5 +39,5 @@ export const Filter = ({ filters, setFilters }: FilterPropsType) => {
         </form>
       </div>
     </>
-  );
-};
+  )
+}

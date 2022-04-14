@@ -1,12 +1,12 @@
-import { gql } from "@apollo/client/core";
-import { pageCommonFragment } from "@lib/api/queries/fragments";
-import { i18n } from "@lib/i18n/config";
+import { gql } from "@apollo/client/core"
+import { pageCommonFragment } from "@lib/api/queries/fragments/common"
+import { i18n } from "@lib/i18n/config"
 
 type PropsType = {
-  slug: string;
-  locale?: string;
-  acfFields?: string;
-};
+  slug: string
+  locale?: string
+  acfFields?: string
+}
 
 const getLocalizedPage = ({
   locale = i18n.defaultLocale,
@@ -23,7 +23,7 @@ query get_${slug} {
     }
   }
 }
-`;
-};
+`
+}
 
-export default getLocalizedPage;
+export default getLocalizedPage
