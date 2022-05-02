@@ -4,16 +4,9 @@ import { ReactElement, ReactNode } from "react"
 import { Router } from "next/router"
 import type { AppProps } from "next/app"
 import { NextPage } from "next/types"
-import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider"
 
-import { useApollo } from "@lib/apollo/client"
 import ProgressBar from "@lib/progressBar"
-
-// ####
-// #### Dynamic Imports
-// ####
-
-// const importOpts = {};
+import { useCreateStore, Provider } from "@api/store"
 
 // ####
 // #### Variables
@@ -45,15 +38,16 @@ type AppPropsWithLayout = AppProps & {
 // ####
 // #### Component
 // ####
+const App = ({ Component, pageProps }: AppPropsWithLayout) => {
+  const createStore = useCreateStore(pageProps.initStore)
 
-function App({ Component, pageProps }: AppPropsWithLayout) {
-  const apolloClient = useApollo(pageProps)
-  const getLayout = Component.getLayout ?? (page => page)
-
+  const getLayout = Component.getLayout ?? ((Component: any) => Component)
   return (
-    <ApolloProvider client={apolloClient}>
-      {getLayout(<Component {...pageProps} />)}
-    </ApolloProvider>
+    <>
+      <Provider createStore={createStore}>
+        {getLayout(<Component {...pageProps} />)}
+      </Provider>
+    </>
   )
 }
 

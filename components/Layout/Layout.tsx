@@ -11,15 +11,17 @@ import Header from "./Header"
 // #### Dynamic Imports
 // ####
 
-const importOpts = { ssr: false }
-
-const Alerts = dynamic(() => import("@components/ui/Alerts"), importOpts)
-// const Footer = dynamic(() => import("@components/ui/Layout/Footer"), {})
 const GlobalStyles = dynamic(() => import("@styles/emotion-global"), {})
+
+const clientOpts = { ssr: false }
+
+const Alerts = dynamic(() => import("@components/ui/Alerts"), clientOpts)
+const Modals = dynamic(() => import("./Modals"), clientOpts)
 const ScrollArrow = dynamic(
   () => import("@components/ui/ScrollArrow"),
-  importOpts,
+  clientOpts,
 )
+const Logic = dynamic(() => import("./Logic"), clientOpts)
 
 // ####
 // #### Types
@@ -44,6 +46,8 @@ const Layout: FC<PropsType> = ({ children, hero }) => {
       </main>
       {/* <Footer />*/}
 
+      <Logic />
+      <Modals />
       <ScrollArrow />
       <Alerts />
     </ThemeProvider>

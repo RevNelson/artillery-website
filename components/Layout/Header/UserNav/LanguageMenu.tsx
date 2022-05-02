@@ -20,9 +20,7 @@ const LanguageMenu = () => {
         {({ open }) => (
           <div>
             <div className="h-full">
-              <Menu.Button
-                className={`font-bold text-sm rounded-md py-2 outline-none`}
-              >
+              <Menu.Button className="font-bold text-sm rounded-md py-2 outline-none">
                 <span className="sr-only">Open user menu</span>
                 <FlagIcon
                   locale={currentLocale}

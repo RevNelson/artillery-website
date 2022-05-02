@@ -10,7 +10,10 @@
       "ArtilleryPage_Acfhome",
       "ArtilleryPage_Acfhome_Hero",
       "ArtilleryPage_Acfhome_Hero_Link",
-      "ArtilleryPage_Acfhome_Hero_Overlay"
+      "ArtilleryPage_Acfhome_Hero_Overlay",
+      "ArtilleryPage_Acfui",
+      "ArtilleryPage_Acfui_Cart",
+      "ArtilleryPage_Acfui_ProfileMenu"
     ],
     "Attribute": [
       "SimpleAttribute",

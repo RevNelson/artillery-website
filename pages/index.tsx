@@ -1,13 +1,17 @@
 // import dynamic from "next/dynamic";
-import { ReactElement } from "react"
 import Link from "next/link"
 import { GetStaticProps, InferGetStaticPropsType } from "next/types"
 
-import { initializeApollo, addApolloState } from "@lib/apollo/client"
 import useLocale from "@lib/hooks/useLocale"
-import { ArtilleryPage } from "@api/gql/types"
+import urql from "@api/urql/serverClient"
+import withUrql from "@api/urql/hoc"
+import {
+  ArtilleryPage,
+  GetMainMenuDataDocument,
+  GetUiStringsDocument,
+} from "@api/gql/types"
 import getLocalizedPage from "@api/queries/dynamic/getLocalizedPage"
-import { heroFragment } from "@api/queries/hero"
+import { heroFragment } from "@api/fragments/hero"
 
 import Layout from "@components/Layout"
 
@@ -19,53 +23,59 @@ import Layout from "@components/Layout"
 // #### Component
 // ####
 
-export default function Page({
+const Page = ({
   data,
-  loading,
   error,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { locale, locales, langs, setLocale } = useLocale()
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { locale, langs, locales, setLocale } = useLocale()
+  // const loggedIn = useStore(state => state.auth.loggedIn)
 
   const page = (data?.artilleryPages.nodes[0] as ArtilleryPage) || null
+  const hero = page?.ACFhome?.hero
+
+  const handleClick = async () => {
+    // await getLocales()
+  }
 
   return (
-    <div className="font-sans">
-      <nav>
-        <Link href="/about">
-          <a>About</a>
-        </Link>
-      </nav>
-      <h1>{page.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: page.content || "" }}></div>
-      {locales.map(locale => {
-        return (
-          <button key={locale + "key"} onClick={() => setLocale(locale)}>
-            {langs[locale].name}
-          </button>
-        )
-      })}
-    </div>
+    <Layout hero={hero}>
+      <div className="font-sans">
+        <div>
+          <button onClick={handleClick}>LOCO</button>
+        </div>
+        <nav>
+          <Link href="/about">
+            <a>About</a>
+          </Link>
+        </nav>
+        <h1>{page.title}</h1>
+        <div dangerouslySetInnerHTML={{ __html: page.content || "" }}></div>
+        {locales &&
+          locales.map(locale => {
+            if (locale)
+              return (
+                <button key={locale + "key"} onClick={() => setLocale(locale)}>
+                  {langs[locale].name}
+                </button>
+              )
+          })}
+      </div>
+    </Layout>
   )
 }
 
 // ####
-// #### Layout
+// #### API
 // ####
 
-Page.getLayout = function getLayout(page: ReactElement) {
-  const data = page.props.data || null
-  const pageData = (data?.artilleryPages.nodes[0] as ArtilleryPage) || null
-  const hero = pageData?.ACFhome?.hero
-
-  return <Layout hero={hero}>{page}</Layout>
-}
+export default withUrql(Page)
 
 // ####
 // #### Data Fetching
 // ####
 
 export const getStaticProps: GetStaticProps = async context => {
-  const client = initializeApollo({})
+  const { client, ssrCache } = urql()
   const locale = context.locale
   const slug = "home"
 
@@ -73,16 +83,26 @@ export const getStaticProps: GetStaticProps = async context => {
 
   const query = getLocalizedPage({ locale, slug, acfFields })
 
-  const { data, loading, error } = await client.query({
-    query,
-  })
+  const { data, error } = await client!.query(query).toPromise()
 
-  const staticProps = { data: data || null, loading, error: error || null }
+  // Menu Data
+  client && (await client.query(GetMainMenuDataDocument, { locale }))
 
-  addApolloState(client, staticProps)
+  // UI Data
+  client && (await client.query(GetUiStringsDocument, { id: `ui-${locale}` }))
+
+  const props = {
+    data: data || null,
+    error: error || null,
+    urqlState: ssrCache.extractData(),
+    initStore: {
+      lastUpdate: Date.now(),
+      light: false,
+    },
+  }
 
   return {
-    props: { ...staticProps },
+    props,
     revalidate: 4 * 60 * 60, // Every 4 hours
   }
 }

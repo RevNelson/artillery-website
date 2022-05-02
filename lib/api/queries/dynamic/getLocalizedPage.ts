@@ -1,5 +1,5 @@
-import { gql } from "@apollo/client/core"
-import { pageCommonFragment } from "@lib/api/queries/fragments/common"
+import { gql } from "urql"
+import { pageCommonFragment } from "@api/fragments/common"
 import { i18n } from "@lib/i18n/config"
 
 type PropsType = {
@@ -14,15 +14,15 @@ const getLocalizedPage = ({
   acfFields,
 }: PropsType) => {
   return gql`
-query get_${slug} {
-  artilleryPages(where: { wpmlLanguage: "${locale}", name: "${slug}" }) {
-    nodes {
-      ${pageCommonFragment}
-      content
-      ${acfFields || ""}
+  query get_${slug} {
+    artilleryPages(where: { wpmlLanguage: "${locale}", name: "${slug}" }) {
+      nodes {
+        ${pageCommonFragment}
+        content
+        ${acfFields || ""}
+      }
     }
   }
-}
 `
 }
 

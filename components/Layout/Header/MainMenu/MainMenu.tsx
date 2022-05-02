@@ -1,5 +1,7 @@
+import { MenuItem, useGetMainMenuDataQuery } from "@api/gql/types"
 import { Popover, Transition } from "@headlessui/react"
-import { Fragment } from "react"
+import useLocale from "@lib/hooks/useLocale"
+import { Fragment, useEffect, useState } from "react"
 
 // ####
 // #### Variables
@@ -96,6 +98,19 @@ function classNames(...classes: string[]) {
 // ####
 
 const MainMenu = () => {
+  const [menu, setMenu] = useState<MenuItem[] | undefined>()
+  const { locale } = useLocale()
+  const [menuData] = useGetMainMenuDataQuery({ variables: { locale } })
+
+  useEffect(() => {
+    const menuItems = menuData.data?.menus?.nodes
+      ? menuData.data.menus.nodes[0]?.menuItems?.nodes
+      : undefined
+    if (menuItems) {
+      setMenu(menuItems as MenuItem[])
+    }
+  })
+
   return (
     <>
       <div className="hidden h-full lg:flex">
@@ -107,7 +122,7 @@ const MainMenu = () => {
                 {({ open }) => (
                   <>
                     <div className="relative flex">
-                      <Popover.Button className="relative z-10 flex items-center justify-center transition-colors ease-out duration-200 text-sm font-medium text-white">
+                      <Popover.Button className="relative z-10 flex items-center justify-center transition-colors ease-out duration-200 text-sm font-medium text-white outline-none">
                         {category.name}
                         <span
                           className={classNames(
@@ -172,15 +187,16 @@ const MainMenu = () => {
               </Popover>
             ))}
 
-            {navigation.pages.map((page: any) => (
-              <a
-                key={page.name}
-                href={page.href}
-                className="flex items-center text-sm font-medium text-white"
-              >
-                {page.name}
-              </a>
-            ))}
+            {menu &&
+              menu.map((menuItem: MenuItem) => (
+                <a
+                  key={menuItem.id}
+                  href={menuItem.path || "/"}
+                  className="flex items-center text-sm font-medium text-white"
+                >
+                  {menuItem.label}
+                </a>
+              ))}
           </div>
         </Popover.Group>
       </div>

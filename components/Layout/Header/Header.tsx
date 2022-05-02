@@ -3,20 +3,20 @@ import Headroom from "react-headroom"
 
 import { ArtilleryPage_Acfhome_Hero, Maybe } from "@api/gql/types"
 
+import UserNav from "./UserNav"
+import MobileNav from "./MobileNav"
+
 // import TopNav from "./TopNav"
 
 // ####
 // #### Dynamic Imports
 // ####
 
-const importOpts = {}
+const clientOpts = { ssr: false }
 
 const Hero = dynamic(() => import("./Hero"), {})
 const MainMenu = dynamic(() => import("./MainMenu"), {})
-const MobileMenu = dynamic(() => import("./MobileMenu"), {})
-const UserNav = dynamic(() => import("./UserNav"), {
-  ssr: false,
-})
+// const MobileMenu = dynamic(() => import("./MobileMenu"), {})
 
 // ####
 // #### Types
@@ -31,8 +31,6 @@ type PropsType = {
 // ####
 
 export const Header = ({ hero }: PropsType) => {
-  // const [searchOpen, setSearchOpen] = useState<boolean>(false)
-
   return (
     <>
       <div className="relative bg-gray-900">
@@ -66,7 +64,7 @@ export const Header = ({ hero }: PropsType) => {
                       <MainMenu />
 
                       {/* Mobile menu and search (lg-) */}
-                      <MobileMenu />
+                      <MobileNav />
 
                       {/* Logo (lg-) */}
                       <a href="#" className="lg:hidden">

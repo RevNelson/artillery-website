@@ -1,7 +1,7 @@
 import { Fragment } from "react"
 import { Transition } from "@headlessui/react"
 
-import useAlert from "@lib/hooks/useAlert"
+import useStore from "@lib/hooks/useStore"
 
 import { ErrorAlert, InfoAlert, SuccessAlert, WarningAlert } from "./Alert"
 
@@ -12,9 +12,12 @@ import { StyledContainer } from "./style"
 // ####
 
 const Alerts = () => {
-  const { alert, showAlert } = useAlert()
+  const { alert, setAlert } = useStore(state => ({
+    setAlert: state.alert.setAlert,
+    alert: state.alert,
+  }))
   const onClose = () => {
-    showAlert({ open: false })
+    setAlert({ open: false })
   }
 
   return (

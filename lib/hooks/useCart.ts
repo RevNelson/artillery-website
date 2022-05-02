@@ -1,68 +1,38 @@
-import jwt_decode from "jwt-decode"
-import { gql } from "@apollo/client/core"
-
-import { authConstants } from "@lib/constants"
-import { initializeApollo } from "@lib/apollo/client"
-import { isServer } from "@lib/utils/isServer"
-import { AddToCartInput } from "@api/gql/types"
-
-const addToCartMutation = gql`
-  mutation addCart($input: AddToCartInput!) {
-    addToCart(input: $input) {
-      cart {
-        isEmpty: contents {
-          itemCount
-          productCount
-          edges {
-            node {
-              extraData {
-                key
-                value
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import {
+  RemoveItemsFromCartInput,
+  useClearCartMutation,
+  useGetCartQuery,
+  useRemoveCartItemMutation,
+} from "@api/gql/types"
+import { useClient } from "urql"
 
 const useCart = () => {
-  const getWooSession = () => {
-    if (!isServer) {
-      return localStorage.getItem(authConstants.WOO_SESSION_KEY)
-    }
-    return null
-  }
+  const client = useClient()
+  const [cartData, cartQuery] = useGetCartQuery()
+  const [_remove, removeMutation] = useRemoveCartItemMutation()
+  const [_clear, clearMutation] = useClearCartMutation()
 
-  const getClientShopId = () => {
-    if (!isServer) {
-      const sessionToken = getWooSession() || ""
-      if (sessionToken) {
-        const clientShopId = jwt_decode<{ data: { customer_id: string } }>(
-          sessionToken,
-        ).data.customer_id
-
-        return clientShopId
+  const clearCart = async () => {
+    clearMutation({ input: {} }).then(res => {
+      const { data, error } = res
+      if (data && cartData.operation) {
+        client.reexecuteOperation(cartData.operation)
       }
-    }
-  }
-
-  const addToCart = async (input: AddToCartInput) => {
-    const apolloClient = initializeApollo({})
-
-    const { data, errors } = await apolloClient.mutate({
-      mutation: addToCartMutation,
-      variables: { input },
-      errorPolicy: "all",
+      // TODO - Set errors
     })
-
-    await apolloClient.refetchQueries({ include: ["CartQuery"] })
-
-    return { data, errors }
   }
 
-  return { addToCart, getClientShopId }
+  const removeItem = async (input: RemoveItemsFromCartInput) => {
+    removeMutation({ input }).then(res => {
+      const { data, error } = res
+      if (data && cartData.operation) {
+        client.reexecuteOperation(cartData.operation)
+      }
+      // TODO - Set errors
+    })
+  }
+
+  return { clearCart, removeItem }
 }
 
 export default useCart
