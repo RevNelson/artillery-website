@@ -1,0 +1,19 @@
+overwrite: true
+schema: "https://api.nelson.tech/graphql"
+documents: "./**/!(*.d).{ts,tsx}"
+generates:
+  lib/api/gql/fragment-matcher.ts:
+    plugins:
+      - fragment-matcher
+  lib/api/gql/types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-urql"
+    config:
+      withHooks: true
+  lib/api/gql/graphql.schema.json:
+    plugins:
+      - "introspection"
+config:
+  skipTypename: true

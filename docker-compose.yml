@@ -1,0 +1,10 @@
+version: "3.3"
+
+services:
+  artillery-website:
+    container_name: artillery-website
+    image: artillery-website
+    ports:
+      - 4281:3000
+    env_file:
+      - .env

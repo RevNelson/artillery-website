@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -13,8 +14,20 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@api": ["lib/api"],
+      "@api/*": ["lib/api/*"],
+      "@assets/*": ["assets/*"],
+      "@components/*": ["components/*"],
+      "@lib": ["lib"],
+      "@lib/*": ["lib/*"],
+      "@pages": ["pages"],
+      "@pages/*": ["pages/*"],
+      "@styles": ["styles"],
+      "@styles/*": ["styles/*"]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/i18n/config.js"],
   "exclude": ["node_modules"]
 }
